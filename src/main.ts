@@ -108,7 +108,11 @@ async function bootstrap() {
 🚀 Studented.me API running on: http://localhost:${port}/api
 📚 API Documentation: http://localhost:${port}/api/docs
     `);
+  } else {
+    await app.init();
   }
+
+  return app;
 }
 
 export const appPromise = bootstrap();
@@ -117,11 +121,9 @@ let cachedApp: any;
 
 export default async (req: any, res: any) => {
   if (!cachedApp) {
-    const app = await NestFactory.create(AppModule);
-    await setupApp(app);
-    await app.init();
+    const app = await appPromise;
     cachedApp = app.getHttpAdapter().getInstance();
   }
-  
+
   return cachedApp(req, res);
 };

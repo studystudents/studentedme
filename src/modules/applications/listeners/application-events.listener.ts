@@ -1,18 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from '../../../database/prisma.service';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
 
 @Injectable()
 export class ApplicationEventsListener {
   private readonly logger = new Logger(ApplicationEventsListener.name);
 
-  constructor(
-    private prisma: PrismaService,
-    @InjectQueue('notifications') private notificationsQueue: Queue,
-    @InjectQueue('tasks') private tasksQueue: Queue,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   /**
    * When application is created, send welcome email to student
@@ -23,28 +17,15 @@ export class ApplicationEventsListener {
 
     this.logger.log(`Handling application.created event for ${applicationId}`);
 
-    // Send welcome email
-    await this.notificationsQueue.add('send-email', {
-      userId: studentId,
-      templateName: 'application-created',
-      data: { applicationId },
-    });
+    this.logger.log(`[notify] send-email to student ${studentId}: application-created for ${applicationId}`);
 
-    // Create task for counselor to review profile
     const application = await this.prisma.application.findUnique({
       where: { id: applicationId },
       include: { counselor: true },
     });
 
     if (application?.counselorId) {
-      await this.tasksQueue.add('create-task', {
-        title: 'Review new application',
-        assignedTo: application.counselorId,
-        relatedEntityType: 'Application',
-        relatedEntityId: applicationId,
-        priority: 'MEDIUM',
-        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-      });
+      this.logger.log(`[task] create-task: Review new application, assigned to ${application.counselorId}`);
     }
   }
 
@@ -57,17 +38,7 @@ export class ApplicationEventsListener {
 
     this.logger.log(`Application ${applicationId} status changed: ${fromStatus} → ${toStatus}`);
 
-    // Send notification to student
-    await this.notificationsQueue.add('send-notification', {
-      userId: studentId,
-      type: 'application_status_changed',
-      templateName: 'application-status-changed',
-      data: {
-        applicationId,
-        oldStatus: fromStatus,
-        newStatus: toStatus,
-      },
-    });
+    this.logger.log(`[notify] send-notification to student ${studentId}: application_status_changed (${fromStatus} → ${toStatus})`);
 
     // Specific workflows based on new status
     switch (toStatus) {
@@ -141,16 +112,8 @@ export class ApplicationEventsListener {
           },
         });
 
-        // Notify counselor
         if (app.counselorId) {
-          await this.notificationsQueue.add('send-notification', {
-            userId: app.counselorId,
-            type: 'application_ready_for_review',
-            data: {
-              applicationId: app.id,
-              studentId,
-            },
-          });
+          this.logger.log(`[notify] send-notification to counselor ${app.counselorId}: application_ready_for_review for ${app.id}`);
         }
 
         this.logger.log(`Application ${app.id} auto-advanced to READY_FOR_REVIEW`);
@@ -167,44 +130,14 @@ export class ApplicationEventsListener {
 
     this.logger.log(`Document ${documentId} rejected`);
 
-    // Send notification to student
-    await this.notificationsQueue.add('send-notification', {
-      userId: studentId,
-      type: 'document_rejected',
-      templateName: 'document-rejected',
-      data: {
-        documentId,
-        reason: comments,
-      },
-    });
+    this.logger.log(`[notify] send-notification to student ${studentId}: document_rejected (${documentId})`);
 
-    // Create task for student to reupload
-    await this.tasksQueue.add('create-task', {
-      title: 'Reupload rejected document',
-      assignedTo: studentId,
-      relatedEntityType: 'Document',
-      relatedEntityId: documentId,
-      priority: 'HIGH',
-      dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
-    });
+    this.logger.log(`[task] create-task: Reupload rejected document, assigned to ${studentId}`);
   }
 
   private async handleDocumentsPending(applicationId: string, studentId: string) {
-    // Send email with list of required documents
-    await this.notificationsQueue.add('send-email', {
-      userId: studentId,
-      templateName: 'documents-required',
-      data: { applicationId },
-    });
-
-    // Create task for student
-    await this.tasksQueue.add('create-task', {
-      title: 'Upload required documents',
-      assignedTo: studentId,
-      relatedEntityType: 'Application',
-      relatedEntityId: applicationId,
-      priority: 'HIGH',
-    });
+    this.logger.log(`[notify] send-email to student ${studentId}: documents-required for ${applicationId}`);
+    this.logger.log(`[task] create-task: Upload required documents, assigned to ${studentId}`);
   }
 
   private async handleReadyForReview(applicationId: string) {
@@ -214,45 +147,16 @@ export class ApplicationEventsListener {
 
     if (!application?.counselorId) return;
 
-    // Create task for counselor to review
-    await this.tasksQueue.add('create-task', {
-      title: 'Review application for submission',
-      assignedTo: application.counselorId,
-      relatedEntityType: 'Application',
-      relatedEntityId: applicationId,
-      priority: 'HIGH',
-      dueDate: new Date(Date.now() + 48 * 60 * 60 * 1000), // 48 hours
-    });
+    this.logger.log(`[task] create-task: Review application for submission, assigned to ${application.counselorId}`);
   }
 
   private async handleApplicationSubmitted(applicationId: string, studentId: string) {
-    // Send confirmation email
-    await this.notificationsQueue.add('send-email', {
-      userId: studentId,
-      templateName: 'application-submitted',
-      data: { applicationId },
-    });
-
-    // Create reminder to check for decision in 30 days
-    await this.tasksQueue.add(
-      'create-reminder',
-      {
-        applicationId,
-        reminderType: 'check_decision',
-      },
-      {
-        delay: 30 * 24 * 60 * 60 * 1000, // 30 days
-      },
-    );
+    this.logger.log(`[notify] send-email to student ${studentId}: application-submitted for ${applicationId}`);
+    this.logger.log(`[task] create-reminder: check_decision for ${applicationId} in 30 days`);
   }
 
   private async handleApplicationAccepted(applicationId: string, studentId: string) {
-    // Send congratulations email
-    await this.notificationsQueue.add('send-email', {
-      userId: studentId,
-      templateName: 'application-accepted',
-      data: { applicationId },
-    });
+    this.logger.log(`[notify] send-email to student ${studentId}: application-accepted for ${applicationId}`);
 
     // Check if student needs visa, create visa case
     const student = await this.prisma.student.findUnique({
@@ -266,7 +170,11 @@ export class ApplicationEventsListener {
         include: { opportunity: true },
       });
 
-      // Create visa case
+      if (!application?.opportunity) {
+        this.logger.warn(`Cannot create visa case: application or opportunity not found for ${applicationId}`);
+        return;
+      }
+
       await this.prisma.visaCase.create({
         data: {
           studentId,
@@ -286,12 +194,7 @@ export class ApplicationEventsListener {
   }
 
   private async handleApplicationRejected(applicationId: string, studentId: string) {
-    // Send empathetic rejection email
-    await this.notificationsQueue.add('send-email', {
-      userId: studentId,
-      templateName: 'application-rejected',
-      data: { applicationId },
-    });
+    this.logger.log(`[notify] send-email to student ${studentId}: application-rejected for ${applicationId}`);
 
     // Offer consultation with counselor
     const application = await this.prisma.application.findUnique({
@@ -299,13 +202,7 @@ export class ApplicationEventsListener {
     });
 
     if (application?.counselorId) {
-      await this.tasksQueue.add('create-task', {
-        title: 'Schedule rejection debrief consultation',
-        assignedTo: application.counselorId,
-        relatedEntityType: 'Application',
-        relatedEntityId: applicationId,
-        priority: 'HIGH',
-      });
+      this.logger.log(`[task] create-task: Schedule rejection debrief consultation, assigned to ${application.counselorId}`);
     }
   }
 }

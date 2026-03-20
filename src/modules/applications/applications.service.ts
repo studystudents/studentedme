@@ -2,10 +2,8 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException,
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { ApplicationStatus, UserType } from '@prisma/client';
-import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ApplicationsService {
@@ -131,6 +129,8 @@ export class ApplicationsService {
   }
 
   async findOne(applicationId: string, userId: string, userType: UserType) {
+    const isStaff = userType === UserType.STAFF;
+
     const application = await this.prisma.application.findUnique({
       where: { id: applicationId },
       include: {
@@ -159,7 +159,7 @@ export class ApplicationsService {
           where: {
             OR: [
               { isInternal: false },
-              { isInternal: true, /* TODO: check if user is staff */ },
+              ...(isStaff ? [{ isInternal: true }] : []),
             ],
           },
           orderBy: { createdAt: 'desc' },
@@ -185,7 +185,7 @@ export class ApplicationsService {
       where.studentId = userId;
     } else if (userType === UserType.STAFF) {
       const staff = await this.prisma.staff.findUnique({ where: { userId } });
-      if (staff.staffRole !== 'SUPERADMIN') {
+      if (staff && staff.staffRole !== 'SUPERADMIN') {
         where.OR = [
           { counselorId: userId },
           { specialistId: userId },
@@ -404,7 +404,10 @@ export class ApplicationsService {
     if (userType === UserType.STAFF) {
       const staff = await this.prisma.staff.findUnique({ where: { userId } });
 
-      // Superadmin has full access
+      if (!staff) {
+        throw new ForbiddenException('Staff profile not found');
+      }
+
       if (staff.staffRole === 'SUPERADMIN') {
         return;
       }

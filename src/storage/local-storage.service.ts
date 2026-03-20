@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createReadStream, createWriteStream } from 'fs';
 import { randomBytes } from 'crypto';
 
 /**

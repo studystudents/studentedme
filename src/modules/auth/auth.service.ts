@@ -63,7 +63,8 @@ export class AuthService {
         ...tokens,
       };
     } catch (error) {
-      this.logger.error(`Registration failed for ${dto.email}: ${error.message}`, error.stack);
+      const err = error instanceof Error ? error : new Error(String(error));
+      this.logger.error(`Registration failed for ${dto.email}: ${err.message}`, err.stack);
       throw error;
     }
   }

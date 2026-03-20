@@ -198,7 +198,7 @@ export class DocumentsService {
       where: { userId: reviewerId },
     });
 
-    if (!reviewer || reviewer.staffRole !== 'DOCUMENT_SPECIALIST') {
+    if (!reviewer || (reviewer.staffRole !== 'DOCUMENT_SPECIALIST' && reviewer.staffRole !== 'SUPERADMIN')) {
       throw new ForbiddenException('Only document specialists can review documents');
     }
 
@@ -256,6 +256,10 @@ export class DocumentsService {
       where.studentId = userId;
     } else if (userType === UserType.STAFF) {
       const staff = await this.prisma.staff.findUnique({ where: { userId } });
+
+      if (!staff) {
+        throw new ForbiddenException('Staff profile not found');
+      }
 
       if (staff.staffRole === 'DOCUMENT_SPECIALIST') {
         // Document specialists see documents in review queue
@@ -381,7 +385,10 @@ export class DocumentsService {
     if (userType === UserType.STAFF) {
       const staff = await this.prisma.staff.findUnique({ where: { userId } });
 
-      // Superadmin has full access
+      if (!staff) {
+        throw new ForbiddenException('Staff profile not found');
+      }
+
       if (staff.staffRole === 'SUPERADMIN') {
         return;
       }
