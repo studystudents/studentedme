@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cream/Sand base background */
+    --background: 40 40% 98%; 
+    /* Deep Charcoal text */
+    --foreground: 220 15% 10%;
+    
+    --card: 40 40% 98%;
+    --card-foreground: 220 15% 10%;
+    --popover: 40 40% 98%;
+    --popover-foreground: 220 15% 10%;
+    
+    /* Terracotta primary accent */
+    --primary: 15 70% 55%;
+    --primary-foreground: 40 40% 98%;
+    
+    /* Forest green secondary accent */
+    --secondary: 155 20% 20%;
+    --secondary-foreground: 40 40% 98%;
+    
+    --muted: 40 20% 90%;
+    --muted-foreground: 220 10% 40%;
+    
+    --accent: 40 20% 90%;
+    --accent-foreground: 220 15% 10%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
+    --ring: 15 70% 55%;
+    
+    --radius: 0.25rem; /* sharper, more editorial corners */
+  }
+
+  .dark {
+    /* Deep charcoal background */
+    --background: 220 15% 10%;
+    /* Cream/Sand text */
+    --foreground: 40 40% 98%;
+    
+    --card: 220 15% 10%;
+    --card-foreground: 40 40% 98%;
+    --popover: 220 15% 10%;
+    --popover-foreground: 40 40% 98%;
+    
+    /* Terracotta primary accent */
+    --primary: 15 70% 55%;
+    --primary-foreground: 40 40% 98%;
+    
+    /* Forest green secondary accent */
+    --secondary: 155 20% 20%;
+    --secondary-foreground: 40 40% 98%;
+    
+    --muted: 220 15% 20%;
+    --muted-foreground: 40 20% 70%;
+    
+    --accent: 220 15% 20%;
+    --accent-foreground: 40 40% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 40% 98%;
+    
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 15 70% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  /* Elegant font classes */
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: var(--font-playfair), serif;
+  }
+}
+
+/* Subtle grain overlay for texture */
+.bg-noise {
+  position: relative;
+}
+.bg-noise::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  z-index: 10;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
