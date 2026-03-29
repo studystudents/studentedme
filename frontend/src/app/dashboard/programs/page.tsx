@@ -1,252 +1,359 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardLayout } from '@/components/dashboard-layout';
-import { opportunitiesApi, type Opportunity } from '@/lib/api';
-import { Search, MapPin, Calendar, DollarSign, GraduationCap, ExternalLink } from 'lucide-react';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { Search, MapPin, GraduationCap, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+
+const DEGREE_OPTIONS = [
+  { label: 'All', value: '' },
+  { label: 'Bachelor', value: 'BACHELOR' },
+  { label: 'Master', value: 'MASTER' },
+  { label: 'PhD', value: 'DOCTORATE' },
+  { label: 'Exchange', value: 'CERTIFICATE' },
+];
+
+const TYPE_OPTIONS = [
+  { label: 'All', value: '' },
+  { label: 'Programs', value: 'PROGRAM' },
+  { label: 'Scholarships', value: 'SCHOLARSHIP' },
+];
+
+const COUNTRY_OPTIONS = [
+  { label: 'All Countries', value: '' },
+  { label: 'USA', value: 'United States' },
+  { label: 'UK', value: 'United Kingdom' },
+  { label: 'Germany', value: 'Germany' },
+  { label: 'Switzerland', value: 'Switzerland' },
+  { label: 'Netherlands', value: 'Netherlands' },
+  { label: 'Italy', value: 'Italy' },
+  { label: 'Canada', value: 'Canada' },
+  { label: 'Australia', value: 'Australia' },
+  { label: 'Singapore', value: 'Singapore' },
+  { label: 'Finland', value: 'Finland' },
+  { label: 'Sweden', value: 'Sweden' },
+  { label: 'France', value: 'France' },
+];
+
+const DEGREE_LABEL: Record<string, string> = {
+  BACHELOR: 'Bachelor',
+  MASTER: 'Master',
+  DOCTORATE: 'PhD',
+  CERTIFICATE: 'Exchange',
+  ASSOCIATE: 'Associate',
+  DIPLOMA: 'Diploma',
+};
+
+interface Program {
+  id: string;
+  name: string;
+  type: string;
+  degreeLevel: string;
+  fieldOfStudy?: string;
+  tuitionFee?: string | number | null;
+  currency?: string;
+  durationMonths?: number;
+  intakeSeason?: string;
+  country: string;
+  city?: string;
+  language?: string;
+  description?: string;
+  institution: {
+    id: string;
+    name: string;
+    ranking?: number;
+    country: string;
+    city?: string;
+    logo?: string;
+    website?: string;
+  };
+}
+
+const LIMIT = 20;
 
 export default function ProgramsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
-    country: '',
-    degreeLevel: '',
-    opportunityType: '',
-  });
+  const [search, setSearch] = useState('');
+  const [degree, setDegree] = useState('');
+  const [type, setType] = useState('');
+  const [country, setCountry] = useState('');
+  const [page, setPage] = useState(1);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const { data: rawPrograms = [], isLoading } = useQuery({
-    queryKey: ['opportunities', filters],
-    queryFn: () => opportunitiesApi.search(filters),
-  });
+  const fetchPrograms = useCallback(async () => {
+    setLoading(true);
+    const params = new URLSearchParams({ limit: String(LIMIT), page: String(page) });
+    if (degree) params.set('degreeLevel', degree);
+    if (type) params.set('type', type);
+    if (country) params.set('country', country);
+    if (search) params.set('search', search);
 
-  // Handle case where API wraps response in deeply nested { data: { data: [...] } } object
-  const programsList = Array.isArray(rawPrograms) 
-    ? rawPrograms 
-    : Array.isArray((rawPrograms as any)?.data?.data)
-      ? (rawPrograms as any).data.data
-      : Array.isArray((rawPrograms as any)?.data)
-        ? (rawPrograms as any).data
-        : [];
-
-  const filteredPrograms = programsList.filter(
-    (program: any) =>
-      program.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      program.institution?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      program.institution?.country?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'UNIVERSITY_PROGRAM':
-        return 'bg-blue-100 text-blue-700';
-      case 'SCHOLARSHIP':
-        return 'bg-green-100 text-green-700';
-      case 'LANGUAGE_COURSE':
-        return 'bg-purple-100 text-purple-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const res = await fetch(`${API_URL}/opportunities?${params}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      setPrograms(data.data || []);
+      setTotal(data.meta?.total || 0);
+    } catch {
+      setPrograms([]);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [search, degree, type, country, page]);
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'UNIVERSITY_PROGRAM':
-        return 'University Program';
-      case 'SCHOLARSHIP':
-        return 'Scholarship';
-      case 'LANGUAGE_COURSE':
-        return 'Language Course';
-      default:
-        return type;
-    }
+  useEffect(() => {
+    const debounce = setTimeout(fetchPrograms, search ? 400 : 0);
+    return () => clearTimeout(debounce);
+  }, [fetchPrograms]);
+
+  const totalPages = Math.ceil(total / LIMIT);
+
+  const handleFilter = (setter: (v: string) => void) => (v: string) => {
+    setter(v);
+    setPage(1);
   };
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Browse Programs</h1>
-          <p className="text-gray-600 mt-2">
-            Discover programs, universities, and scholarships worldwide
+        <div className="border-b border-foreground/10 pb-8">
+          <h1 className="text-3xl font-serif font-medium tracking-tight">Browse Programs</h1>
+          <p className="text-foreground/50 font-light mt-1 text-sm">
+            {total > 0 ? `${total} programs across top universities worldwide` : 'Discover programs, universities, and scholarships worldwide'}
           </p>
         </div>
 
-        {/* Search Bar */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input
-                placeholder="Search by program, university, or country..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 text-lg"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        {/* Search */}
+        <div className="relative max-w-2xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/30" />
+          <input
+            type="text"
+            placeholder="Search by program, university, or field..."
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            className="w-full pl-11 pr-4 h-11 border border-foreground/15 bg-transparent text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground/40 transition-colors"
+          />
+        </div>
 
         {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <select
-            className="px-4 py-2 border rounded-md bg-white"
-            value={filters.opportunityType}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, opportunityType: e.target.value }))
-            }
-          >
-            <option value="">All Types</option>
-            <option value="UNIVERSITY_PROGRAM">University Programs</option>
-            <option value="SCHOLARSHIP">Scholarships</option>
-            <option value="LANGUAGE_COURSE">Language Courses</option>
-          </select>
+        <div className="flex flex-wrap gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Type</p>
+            <div className="flex gap-1">
+              {TYPE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleFilter(setType)(opt.value)}
+                  className={`px-3 h-8 text-xs tracking-wide border transition-colors ${
+                    type === opt.value
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'border-foreground/15 text-foreground/50 hover:border-foreground/40 hover:text-foreground'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <select
-            className="px-4 py-2 border rounded-md bg-white"
-            value={filters.degreeLevel}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, degreeLevel: e.target.value }))
-            }
-          >
-            <option value="">All Degrees</option>
-            <option value="Bachelor">Bachelor&apos;s</option>
-            <option value="Master">Master&apos;s</option>
-            <option value="PhD">PhD</option>
-          </select>
+          <div>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Degree</p>
+            <div className="flex gap-1 flex-wrap">
+              {DEGREE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleFilter(setDegree)(opt.value)}
+                  className={`px-3 h-8 text-xs tracking-wide border transition-colors ${
+                    degree === opt.value
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'border-foreground/15 text-foreground/50 hover:border-foreground/40 hover:text-foreground'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <select
-            className="px-4 py-2 border rounded-md bg-white"
-            value={filters.country}
-            onChange={(e) => setFilters((prev) => ({ ...prev, country: e.target.value }))}
-          >
-            <option value="">All Countries</option>
-            <option value="USA">United States</option>
-            <option value="UK">United Kingdom</option>
-            <option value="Canada">Canada</option>
-            <option value="Australia">Australia</option>
-            <option value="Germany">Germany</option>
-          </select>
+          <div>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Country</p>
+            <select
+              value={country}
+              onChange={(e) => handleFilter(setCountry)(e.target.value)}
+              className="h-8 px-3 text-xs border border-foreground/15 bg-background text-foreground/70 focus:outline-none focus:border-foreground/40 transition-colors"
+            >
+              {COUNTRY_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Results */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="text-gray-500 mt-4">Loading programs...</p>
+        {loading ? (
+          <div className="space-y-0">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="border-t border-foreground/10 py-6 animate-pulse">
+                <div className="flex gap-6">
+                  <div className="h-4 w-16 bg-foreground/5" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-5 w-72 bg-foreground/5" />
+                    <div className="h-4 w-48 bg-foreground/5" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ) : filteredPrograms.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-12">
-              <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">No programs found matching your criteria</p>
-            </CardContent>
-          </Card>
+        ) : programs.length === 0 ? (
+          <div className="border-t border-foreground/10 py-24 text-center">
+            <Search className="h-8 w-8 text-foreground/20 mx-auto mb-4" />
+            <p className="text-foreground/40 font-light text-sm">No programs found matching your criteria</p>
+          </div>
         ) : (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Showing {filteredPrograms.length} program{filteredPrograms.length !== 1 ? 's' : ''}
-            </p>
+          <>
+            <div className="space-y-0">
+              {programs.map((program) => (
+                <div
+                  key={program.id}
+                  className="border-t border-foreground/10 py-6 grid grid-cols-12 gap-4 group hover:bg-foreground/[0.02] transition-colors -mx-2 px-2"
+                >
+                  {/* Degree badge + ranking */}
+                  <div className="col-span-1 pt-0.5 flex flex-col gap-1.5">
+                    <span className="text-xs border border-foreground/10 px-2 py-0.5 text-foreground/40 w-fit whitespace-nowrap">
+                      {DEGREE_LABEL[program.degreeLevel] || program.degreeLevel}
+                    </span>
+                    {program.institution.ranking && (
+                      <span className="text-xs text-primary font-medium">#{program.institution.ranking}</span>
+                    )}
+                  </div>
 
-            {filteredPrograms.map((program: Opportunity) => (
-              <Card key={program.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex gap-4 flex-1">
-                      {/* University Logo */}
-                      <div className="h-16 w-16 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                        {program.institution?.name?.[0] || 'U'}
-                      </div>
-
-                      {/* Program Info */}
-                      <div className="flex-1">
-                        <div className="flex items-start gap-3 mb-2">
-                          <h3 className="text-xl font-semibold flex-1">{program.name}</h3>
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(
-                              program.opportunityType
-                            )}`}
-                          >
-                            {getTypeLabel(program.opportunityType)}
-                          </span>
-                        </div>
-
-                        {program.institution && (
-                          <div className="flex items-center gap-2 text-gray-600 mb-3">
-                            <GraduationCap className="h-4 w-4" />
-                            <span className="font-medium">{program.institution.name}</span>
-                            <span>•</span>
-                            <MapPin className="h-4 w-4" />
-                            <span>
-                              {program.institution.city}, {program.institution.country}
-                            </span>
-                            {program.institution.ranking && (
-                              <>
-                                <span>•</span>
-                                <span className="text-primary font-medium">
-                                  #{program.institution.ranking}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        )}
-
-                        <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
-                          {program.degreeLevel && (
-                            <span className="flex items-center gap-1">
-                              <GraduationCap className="h-4 w-4" />
-                              {program.degreeLevel}
-                            </span>
-                          )}
-                          {program.duration && (
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {program.duration} months
-                            </span>
-                          )}
-                          {program.tuitionFee && (
-                            <span className="flex items-center gap-1">
-                              <DollarSign className="h-4 w-4" />
-                              {formatCurrency(program.tuitionFee, program.currency)}
-                            </span>
-                          )}
-                          {program.deadline && (
-                            <span className="flex items-center gap-1 text-orange-600 font-medium">
-                              <Calendar className="h-4 w-4" />
-                              Deadline: {formatDate(program.deadline)}
-                            </span>
-                          )}
-                        </div>
-
-                        {program.description && (
-                          <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                            {program.description}
-                          </p>
-                        )}
-
-                        <div className="flex gap-3">
-                          <Link href={`/dashboard/programs/${program.id}`}>
-                            <Button variant="outline" size="sm" className="gap-2">
-                              <ExternalLink className="h-4 w-4" />
-                              View Details
-                            </Button>
-                          </Link>
-                          <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
-                            <Button size="sm">Apply Now</Button>
-                          </Link>
-                        </div>
+                  {/* Name + university */}
+                  <div className="col-span-4 flex items-start gap-3">
+                    {/* Logo */}
+                    <div className="h-8 w-8 flex-shrink-0 border border-foreground/8 flex items-center justify-center overflow-hidden bg-white">
+                      {program.institution.logo ? (
+                        <img
+                          src={program.institution.logo}
+                          alt={program.institution.name}
+                          className="h-6 w-6 object-contain"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <span className="text-xs font-serif text-foreground/40">
+                          {program.institution.name[0]}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-base font-medium group-hover:text-primary transition-colors leading-snug mb-1">
+                        {program.name}
+                      </h3>
+                      <div className="flex items-center gap-1.5 text-foreground/50 text-xs">
+                        <GraduationCap className="h-3 w-3 flex-shrink-0" />
+                        <span>{program.institution.name}</span>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+
+                  {/* Field + language */}
+                  <div className="col-span-2 flex flex-col gap-1 justify-center">
+                    {program.fieldOfStudy && (
+                      <span className="text-xs text-foreground/60">{program.fieldOfStudy}</span>
+                    )}
+                    {program.language && (
+                      <span className="text-xs text-foreground/30 uppercase tracking-wide">{program.language}</span>
+                    )}
+                  </div>
+
+                  {/* Location + duration */}
+                  <div className="col-span-2 flex flex-col gap-1 justify-center">
+                    <div className="flex items-center gap-1 text-xs text-foreground/50">
+                      <MapPin className="h-3 w-3 flex-shrink-0" />
+                      <span>{program.city}, {program.country}</span>
+                    </div>
+                    {program.durationMonths && (
+                      <div className="flex items-center gap-1 text-xs text-foreground/40">
+                        <Clock className="h-3 w-3 flex-shrink-0" />
+                        <span>{program.durationMonths} mo.</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tuition */}
+                  <div className="col-span-2 flex flex-col gap-1 justify-center">
+                    {Number(program.tuitionFee) > 0 ? (
+                      <span className="text-sm font-serif text-foreground/80">
+                        {Number(program.tuitionFee).toLocaleString()} <span className="text-xs text-foreground/40">{program.currency}</span>
+                      </span>
+                    ) : (
+                      <span className="text-sm font-serif text-emerald-600">Free</span>
+                    )}
+                    {program.intakeSeason && (
+                      <span className="text-xs text-foreground/30">{program.intakeSeason}</span>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="col-span-1 flex items-center justify-end gap-2">
+                    <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
+                      <button className="h-8 px-3 text-xs border border-foreground/15 text-foreground/60 hover:bg-foreground hover:text-background hover:border-foreground transition-colors whitespace-nowrap">
+                        Apply
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+              <div className="border-t border-foreground/10" />
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-4">
+                <span className="text-xs text-foreground/40">
+                  Page {page} of {totalPages} · {total} programs
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="h-8 w-8 flex items-center justify-center border border-foreground/15 text-foreground/50 hover:text-foreground hover:border-foreground/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const p = page <= 3 ? i + 1 : page - 2 + i;
+                    if (p > totalPages) return null;
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => setPage(p)}
+                        className={`h-8 w-8 text-xs border transition-colors ${
+                          p === page
+                            ? 'bg-foreground text-background border-foreground'
+                            : 'border-foreground/15 text-foreground/50 hover:border-foreground/40 hover:text-foreground'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="h-8 w-8 flex items-center justify-center border border-foreground/15 text-foreground/50 hover:text-foreground hover:border-foreground/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </DashboardLayout>

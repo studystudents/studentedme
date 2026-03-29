@@ -68,6 +68,7 @@ export class OpportunitiesService {
               name: true,
               slug: true,
               logo: true,
+              website: true,
               country: true,
               city: true,
               ranking: true,
