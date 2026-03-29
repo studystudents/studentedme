@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, MapPin, Search } from 'lucide-react';
 import { PublicNav } from '@/components/public-nav';
 import { PublicFooter } from '@/components/public-footer';
+import { useLanguage } from '@/lib/i18n';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -42,6 +43,7 @@ interface Program {
 }
 
 export default function ProgramsPage() {
+  const { t } = useLanguage();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -86,14 +88,16 @@ export default function ProgramsPage() {
         {/* Hero */}
         <section className="pt-24 pb-20 lg:pt-36 px-6 lg:px-12 max-w-[90rem] mx-auto border-b border-foreground/10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <p className="text-xs uppercase tracking-widest text-primary mb-8">Programs</p>
+            <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('programs.badge')}</p>
             <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
-              Find Your<br />
-              <span className="italic text-primary">Perfect</span><br />
-              Program.
+              {t('programs.hero1')}<br />
+              <span className="italic text-primary">{t('programs.hero2')}</span><br />
+              {t('programs.hero3')}
             </h1>
             <p className="mt-10 text-xl text-foreground/70 font-light max-w-xl leading-relaxed">
-              Browse {total > 0 ? `${total}+` : 'hundreds of'} programs across top universities worldwide — from Bachelor's to PhD.
+              {total > 0
+                ? t('programs.heroSub').replace('{count}', String(total))
+                : t('programs.heroSubDefault')}
             </p>
           </motion.div>
         </section>
@@ -116,7 +120,7 @@ export default function ProgramsPage() {
             <div className="flex flex-wrap gap-8">
               {/* Degree filter */}
               <div>
-                <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">Degree</p>
+                <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{t('programs.degree')}</p>
                 <div className="flex flex-wrap gap-2">
                   {DEGREE_LEVELS.map((d) => (
                     <button
@@ -136,7 +140,7 @@ export default function ProgramsPage() {
 
               {/* Country filter */}
               <div>
-                <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">Country</p>
+                <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{t('programs.country')}</p>
                 <div className="flex flex-wrap gap-2">
                   {COUNTRIES.map((c) => (
                     <button
@@ -161,7 +165,7 @@ export default function ProgramsPage() {
         <section className="py-16 px-6 lg:px-12">
           <div className="max-w-[90rem] mx-auto">
             <p className="text-xs uppercase tracking-widest text-foreground/40 mb-12">
-              {loading ? 'Loading...' : `${total} program${total !== 1 ? 's' : ''} found`}
+              {loading ? t('programs.loading') : `${total} ${total !== 1 ? t('programs.foundPlural') : t('programs.found')}`}
             </p>
 
             {loading ? (
@@ -175,7 +179,7 @@ export default function ProgramsPage() {
               </div>
             ) : programs.length === 0 ? (
               <div className="border-t border-foreground/10 py-24 text-center">
-                <p className="text-foreground/40 font-light">No programs found matching your criteria.</p>
+                <p className="text-foreground/40 font-light">{t('programs.noResults')}</p>
               </div>
             ) : (
               <div className="space-y-0">
@@ -268,13 +272,13 @@ export default function ProgramsPage() {
         {/* CTA */}
         <section className="py-24 px-6 lg:px-12 bg-secondary text-secondary-foreground">
           <div className="max-w-[90rem] mx-auto text-center">
-            <h2 className="text-4xl font-serif mb-6">Ready to apply?</h2>
+            <h2 className="text-4xl font-serif mb-6">{t('programs.ctaTitle')}</h2>
             <p className="text-secondary-foreground/60 font-light text-lg mb-10">
-              Our counselors will help you find the best program and guide you through the entire application process.
+              {t('programs.ctaSub')}
             </p>
             <Link href="/register">
               <button className="rounded-none border border-secondary-foreground/20 hover:bg-secondary-foreground hover:text-secondary transition-colors px-12 h-14 text-sm tracking-widest uppercase">
-                Get Started
+                {t('programs.ctaBtn')}
               </button>
             </Link>
           </div>

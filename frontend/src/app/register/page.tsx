@@ -66,8 +66,8 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             {error && <div className="border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">{error}</div>}
             <div className="grid md:grid-cols-2 gap-8">
-              {field(t('register.firstName'), 'firstName', 'text', 'John')}
-              {field(t('register.lastName'), 'lastName', 'text', 'Doe')}
+              {field(t('register.firstName'), 'firstName', 'text', 'Айдар')}
+              {field(t('register.lastName'), 'lastName', 'text', 'Сейткали')}
             </div>
             {field(t('register.email'), 'email', 'email', 'you@example.com')}
             <div>
@@ -78,7 +78,7 @@ export default function RegisterPage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-foreground/50 mb-3">{t('register.phone')} <span className="normal-case">{t('register.optional')}</span></label>
-                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+7 777 777 77 77" className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest text-foreground/50 mb-3">{t('register.dob')} <span className="normal-case">{t('register.optional')}</span></label>
@@ -88,11 +88,11 @@ export default function RegisterPage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-foreground/50 mb-3">{t('register.nationality')} <span className="normal-case">{t('register.optional')}</span></label>
-                <input name="nationality" value={formData.nationality} onChange={handleChange} className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
+                <input name="nationality" value={formData.nationality} onChange={handleChange} placeholder="Kazakhstan" className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest text-foreground/50 mb-3">{t('register.country')} <span className="normal-case">{t('register.optional')}</span></label>
-                <input name="countryOfResidence" value={formData.countryOfResidence} onChange={handleChange} className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
+                <input name="countryOfResidence" value={formData.countryOfResidence} onChange={handleChange} placeholder="Kazakhstan" className="w-full border-b border-foreground/20 bg-transparent py-3 text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-primary transition-colors" />
               </div>
             </div>
             <button type="submit" disabled={loading} className="w-full rounded-none bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 h-14 text-sm tracking-widest uppercase transition-colors">

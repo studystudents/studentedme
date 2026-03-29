@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/dashboard-layout';
 import { Search, MapPin, GraduationCap, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -74,6 +75,7 @@ interface Program {
 const LIMIT = 20;
 
 export default function ProgramsPage() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState('');
   const [degree, setDegree] = useState('');
   const [type, setType] = useState('');
@@ -123,9 +125,11 @@ export default function ProgramsPage() {
       <div className="space-y-8">
         {/* Header */}
         <div className="border-b border-foreground/10 pb-8">
-          <h1 className="text-3xl font-serif font-medium tracking-tight">Browse Programs</h1>
+          <h1 className="text-3xl font-serif font-medium tracking-tight">{t('dashboard.programs.title')}</h1>
           <p className="text-foreground/50 font-light mt-1 text-sm">
-            {total > 0 ? `${total} programs across top universities worldwide` : 'Discover programs, universities, and scholarships worldwide'}
+            {total > 0
+              ? t('dashboard.programs.subtitleCount').replace('{total}', String(total))
+              : t('dashboard.programs.subtitleDefault')}
           </p>
         </div>
 
@@ -134,7 +138,7 @@ export default function ProgramsPage() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/30" />
           <input
             type="text"
-            placeholder="Search by program, university, or field..."
+            placeholder={t('dashboard.programs.searchPlaceholder')}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="w-full pl-11 pr-4 h-11 border border-foreground/15 bg-transparent text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground/40 transition-colors"
@@ -144,7 +148,7 @@ export default function ProgramsPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-6">
           <div>
-            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Type</p>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">{t('dashboard.programs.typeLabel')}</p>
             <div className="flex gap-1">
               {TYPE_OPTIONS.map((opt) => (
                 <button
@@ -163,7 +167,7 @@ export default function ProgramsPage() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Degree</p>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">{t('dashboard.programs.degreeLabel')}</p>
             <div className="flex gap-1 flex-wrap">
               {DEGREE_OPTIONS.map((opt) => (
                 <button
@@ -182,7 +186,7 @@ export default function ProgramsPage() {
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">Country</p>
+            <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">{t('dashboard.programs.countryLabel')}</p>
             <select
               value={country}
               onChange={(e) => handleFilter(setCountry)(e.target.value)}
@@ -213,7 +217,7 @@ export default function ProgramsPage() {
         ) : programs.length === 0 ? (
           <div className="border-t border-foreground/10 py-24 text-center">
             <Search className="h-8 w-8 text-foreground/20 mx-auto mb-4" />
-            <p className="text-foreground/40 font-light text-sm">No programs found matching your criteria</p>
+            <p className="text-foreground/40 font-light text-sm">{t('dashboard.programs.noResults')}</p>
           </div>
         ) : (
           <>
@@ -303,7 +307,7 @@ export default function ProgramsPage() {
                   <div className="col-span-1 flex items-center justify-end gap-2">
                     <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
                       <button className="h-8 px-3 text-xs border border-foreground/15 text-foreground/60 hover:bg-foreground hover:text-background hover:border-foreground transition-colors whitespace-nowrap">
-                        Apply
+                        {t('dashboard.programs.applyBtn')}
                       </button>
                     </Link>
                   </div>
@@ -316,7 +320,10 @@ export default function ProgramsPage() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between pt-4">
                 <span className="text-xs text-foreground/40">
-                  Page {page} of {totalPages} · {total} programs
+                  {t('dashboard.programs.pageOf')
+                    .replace('{page}', String(page))
+                    .replace('{total}', String(totalPages))
+                    .replace('{count}', String(total))}
                 </span>
                 <div className="flex items-center gap-1">
                   <button

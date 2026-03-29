@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardLayout } from '@/components/dashboard-layout';
 import { documentsApi } from '@/lib/api';
+import { useLanguage } from '@/lib/i18n';
 import { useDropzone } from 'react-dropzone';
 import {
   Upload,
@@ -21,6 +22,7 @@ import { formatDate } from '@/lib/utils';
 import axios from 'axios';
 
 export default function DocumentsPage() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -130,9 +132,9 @@ export default function DocumentsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">My Documents</h1>
+          <h1 className="text-3xl font-bold">{t('dashboard.documents.title')}</h1>
           <p className="text-gray-600 mt-2">
-            Upload and manage your application documents securely
+            {t('dashboard.documents.subtitle')}
           </p>
         </div>
 
@@ -142,7 +144,7 @@ export default function DocumentsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Approved</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.documents.approved')}</p>
                   <p className="text-3xl font-bold">{groupedDocuments.approved.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-green-50">
@@ -156,7 +158,7 @@ export default function DocumentsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Pending Review</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.documents.pendingReview')}</p>
                   <p className="text-3xl font-bold">{groupedDocuments.pending.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-yellow-50">
@@ -170,7 +172,7 @@ export default function DocumentsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Needs Reupload</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.documents.needsReupload')}</p>
                   <p className="text-3xl font-bold">{groupedDocuments.rejected.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-red-50">
@@ -184,9 +186,9 @@ export default function DocumentsPage() {
         {/* Upload Area */}
         <Card>
           <CardHeader>
-            <CardTitle>Upload Documents</CardTitle>
+            <CardTitle>{t('dashboard.documents.uploadTitle')}</CardTitle>
             <CardDescription>
-              Drag and drop files or click to browse. Supported formats: PDF, JPG, PNG, DOC
+              {t('dashboard.documents.uploadDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -202,7 +204,7 @@ export default function DocumentsPage() {
               <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               {uploading ? (
                 <>
-                  <p className="text-lg font-medium mb-2">Uploading...</p>
+                  <p className="text-lg font-medium mb-2">{t('dashboard.documents.uploading')}</p>
                   <div className="max-w-xs mx-auto">
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
@@ -216,9 +218,9 @@ export default function DocumentsPage() {
               ) : (
                 <>
                   <p className="text-lg font-medium mb-2">
-                    {isDragActive ? 'Drop files here' : 'Drag & drop files here'}
+                    {isDragActive ? t('dashboard.documents.dropActive') : t('dashboard.documents.dropInactive')}
                   </p>
-                  <p className="text-sm text-gray-500">or click to select files</p>
+                  <p className="text-sm text-gray-500">{t('dashboard.documents.clickToSelect')}</p>
                 </>
               )}
             </div>
@@ -230,15 +232,15 @@ export default function DocumentsPage() {
           <Card>
             <CardContent className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading documents...</p>
+              <p className="text-gray-500">{t('dashboard.documents.loading')}</p>
             </CardContent>
           </Card>
         ) : documents.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No documents yet</h3>
-              <p className="text-gray-500">Upload your first document to get started</p>
+              <h3 className="text-lg font-semibold mb-2">{t('dashboard.documents.noDocsTitle')}</h3>
+              <p className="text-gray-500">{t('dashboard.documents.noDocsDesc')}</p>
             </CardContent>
           </Card>
         ) : (
@@ -249,10 +251,10 @@ export default function DocumentsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-yellow-600" />
-                    Pending Review
+                    {t('dashboard.documents.pendingTitle')}
                   </CardTitle>
                   <CardDescription>
-                    These documents are being reviewed by your counselor
+                    {t('dashboard.documents.pendingDesc')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -282,7 +284,7 @@ export default function DocumentsPage() {
                           )}`}
                         >
                           {getStatusIcon(doc.reviewStatus)}
-                          <span>Pending</span>
+                          <span>{t('dashboard.documents.pendingBadge')}</span>
                         </div>
                         <Button
                           variant="ghost"
@@ -304,9 +306,9 @@ export default function DocumentsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    Approved Documents
+                    {t('dashboard.documents.approvedTitle')}
                   </CardTitle>
-                  <CardDescription>These documents have been verified and approved</CardDescription>
+                  <CardDescription>{t('dashboard.documents.approvedDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {groupedDocuments.approved.map((doc) => (
@@ -333,7 +335,7 @@ export default function DocumentsPage() {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm text-green-700 bg-green-100 border border-green-200">
                           {getStatusIcon(doc.reviewStatus)}
-                          <span>Approved</span>
+                          <span>{t('dashboard.documents.approvedBadge')}</span>
                         </div>
                         <Button
                           variant="ghost"
@@ -355,10 +357,10 @@ export default function DocumentsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <AlertCircle className="h-5 w-5 text-red-600" />
-                    Needs Reupload
+                    {t('dashboard.documents.rejectedTitle')}
                   </CardTitle>
                   <CardDescription>
-                    These documents were rejected. Please upload corrected versions.
+                    {t('dashboard.documents.rejectedDesc')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -381,11 +383,11 @@ export default function DocumentsPage() {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm text-red-700 bg-red-100 border border-red-200">
                           {getStatusIcon(doc.reviewStatus)}
-                          <span>Rejected</span>
+                          <span>{t('dashboard.documents.rejectedBadge')}</span>
                         </div>
                         <Button variant="destructive" size="sm">
                           <Upload className="h-4 w-4 mr-2" />
-                          Reupload
+                          {t('dashboard.documents.reupload')}
                         </Button>
                       </div>
                     </div>

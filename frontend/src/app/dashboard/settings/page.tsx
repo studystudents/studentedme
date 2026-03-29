@@ -10,9 +10,11 @@ import { DashboardLayout } from '@/components/dashboard-layout';
 import { useAuth } from '@/lib/auth';
 import { usersApi } from '@/lib/api';
 import { User, Mail, Phone, Globe, Calendar, Save, CheckCircle2, FileText, CreditCard } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 export default function SettingsPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [saved, setSaved] = useState(false);
 
@@ -55,22 +57,22 @@ export default function SettingsPage() {
       <div className="max-w-3xl space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account settings and preferences</p>
+          <h1 className="text-3xl font-bold">{t('dashboard.settings.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('dashboard.settings.subtitle')}</p>
         </div>
 
         {saved && (
           <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
             <CheckCircle2 className="h-5 w-5" />
-            <span className="font-medium">Settings saved successfully!</span>
+            <span className="font-medium">{t('dashboard.settings.savedMsg')}</span>
           </div>
         )}
 
         {/* Profile Information */}
         <Card>
           <CardHeader>
-            <CardTitle>Profile Information</CardTitle>
-            <CardDescription>Update your personal information</CardDescription>
+            <CardTitle>{t('dashboard.settings.profileTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.settings.profileDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,7 +81,7 @@ export default function SettingsPage() {
                   <Label htmlFor="firstName">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      First Name
+                      {t('dashboard.settings.firstName')}
                     </div>
                   </Label>
                   <Input
@@ -87,18 +89,18 @@ export default function SettingsPage() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    placeholder="John"
+                    placeholder="Айдар"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName">{t('dashboard.settings.lastName')}</Label>
                   <Input
                     id="lastName"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    placeholder="Doe"
+                    placeholder="Сейткали"
                   />
                 </div>
               </div>
@@ -107,7 +109,7 @@ export default function SettingsPage() {
                 <Label htmlFor="email">
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
-                    Email Address
+                    {t('dashboard.settings.email')}
                   </div>
                 </Label>
                 <Input
@@ -119,14 +121,14 @@ export default function SettingsPage() {
                   placeholder="you@example.com"
                   disabled
                 />
-                <p className="text-sm text-gray-500">Email cannot be changed</p>
+                <p className="text-sm text-gray-500">{t('dashboard.settings.emailNote')}</p>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="phone">
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
-                    Phone Number
+                    {t('dashboard.settings.phone')}
                   </div>
                 </Label>
                 <Input
@@ -135,7 +137,7 @@ export default function SettingsPage() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+1234567890"
+                  placeholder="+7 777 777 77 77"
                 />
               </div>
 
@@ -144,7 +146,7 @@ export default function SettingsPage() {
                   <Label htmlFor="dateOfBirth">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      Date of Birth
+                      {t('dashboard.settings.dob')}
                     </div>
                   </Label>
                   <Input
@@ -160,7 +162,7 @@ export default function SettingsPage() {
                   <Label htmlFor="nationality">
                     <div className="flex items-center gap-2">
                       <Globe className="h-4 w-4" />
-                      Nationality
+                      {t('dashboard.settings.nationality')}
                     </div>
                   </Label>
                   <Input
@@ -168,7 +170,7 @@ export default function SettingsPage() {
                     name="nationality"
                     value={formData.nationality}
                     onChange={handleChange}
-                    placeholder="USA"
+                    placeholder="Kazakhstan"
                   />
                 </div>
               </div>
@@ -177,7 +179,7 @@ export default function SettingsPage() {
                 <Label htmlFor="countryOfResidence">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4" />
-                    Country of Residence
+                    {t('dashboard.settings.residence')}
                   </div>
                 </Label>
                 <Input
@@ -185,7 +187,7 @@ export default function SettingsPage() {
                   name="countryOfResidence"
                   value={formData.countryOfResidence}
                   onChange={handleChange}
-                  placeholder="United States"
+                  placeholder="Kazakhstan"
                 />
               </div>
 
@@ -195,7 +197,7 @@ export default function SettingsPage() {
                   <Label htmlFor="passportNumber">
                     <div className="flex items-center gap-2">
                       <CreditCard className="h-4 w-4" />
-                      Passport Number
+                      {t('dashboard.settings.passport')}
                     </div>
                   </Label>
                   <Input
@@ -211,7 +213,7 @@ export default function SettingsPage() {
                   <Label htmlFor="passportExpiry">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      Passport Expiry Date
+                      {t('dashboard.settings.passportExpiry')}
                     </div>
                   </Label>
                   <Input
@@ -227,7 +229,7 @@ export default function SettingsPage() {
 
               <Button type="submit" className="gap-2">
                 <Save className="h-4 w-4" />
-                Save Changes
+                {t('dashboard.settings.saveBtn')}
               </Button>
             </form>
           </CardContent>
@@ -236,23 +238,23 @@ export default function SettingsPage() {
         {/* Account Security */}
         <Card>
           <CardHeader>
-            <CardTitle>Account Security</CardTitle>
-            <CardDescription>Manage your password and security settings</CardDescription>
+            <CardTitle>{t('dashboard.settings.securityTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.settings.securityDesc')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="font-medium mb-2">Password</h4>
+              <h4 className="font-medium mb-2">{t('dashboard.settings.passwordLabel')}</h4>
               <p className="text-sm text-gray-600 mb-4">
-                Last changed: Never
+                {t('dashboard.settings.passwordNote')}
               </p>
-              <Button variant="outline">Change Password</Button>
+              <Button variant="outline">{t('dashboard.settings.changePassword')}</Button>
             </div>
             <div className="pt-4 border-t">
-              <h4 className="font-medium mb-2">Two-Factor Authentication</h4>
+              <h4 className="font-medium mb-2">{t('dashboard.settings.twoFaTitle')}</h4>
               <p className="text-sm text-gray-600 mb-4">
-                Add an extra layer of security to your account
+                {t('dashboard.settings.twoFaDesc')}
               </p>
-              <Button variant="outline">Enable 2FA</Button>
+              <Button variant="outline">{t('dashboard.settings.enable2fa')}</Button>
             </div>
           </CardContent>
         </Card>
@@ -260,42 +262,42 @@ export default function SettingsPage() {
         {/* Notifications */}
         <Card>
           <CardHeader>
-            <CardTitle>Notification Preferences</CardTitle>
-            <CardDescription>Choose how you want to be notified</CardDescription>
+            <CardTitle>{t('dashboard.settings.notificationsTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.settings.notificationsDesc')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium">Email Notifications</h4>
+                <h4 className="font-medium">{t('dashboard.settings.emailNotif')}</h4>
                 <p className="text-sm text-gray-600">
-                  Receive updates about your applications via email
+                  {t('dashboard.settings.emailNotifDesc')}
                 </p>
               </div>
               <input type="checkbox" className="h-5 w-5" defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium">Application Updates</h4>
+                <h4 className="font-medium">{t('dashboard.settings.appUpdates')}</h4>
                 <p className="text-sm text-gray-600">
-                  Get notified when your application status changes
+                  {t('dashboard.settings.appUpdatesDesc')}
                 </p>
               </div>
               <input type="checkbox" className="h-5 w-5" defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium">Document Reminders</h4>
+                <h4 className="font-medium">{t('dashboard.settings.docReminders')}</h4>
                 <p className="text-sm text-gray-600">
-                  Reminders for pending document uploads
+                  {t('dashboard.settings.docRemindersDesc')}
                 </p>
               </div>
               <input type="checkbox" className="h-5 w-5" defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium">Marketing Communications</h4>
+                <h4 className="font-medium">{t('dashboard.settings.marketing')}</h4>
                 <p className="text-sm text-gray-600">
-                  Receive news about new programs and scholarships
+                  {t('dashboard.settings.marketingDesc')}
                 </p>
               </div>
               <input type="checkbox" className="h-5 w-5" />
@@ -306,16 +308,16 @@ export default function SettingsPage() {
         {/* Danger Zone */}
         <Card className="border-red-200">
           <CardHeader>
-            <CardTitle className="text-red-600">Danger Zone</CardTitle>
-            <CardDescription>Irreversible actions</CardDescription>
+            <CardTitle className="text-red-600">{t('dashboard.settings.dangerTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.settings.dangerDesc')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="font-medium mb-2">Delete Account</h4>
+              <h4 className="font-medium mb-2">{t('dashboard.settings.deleteTitle')}</h4>
               <p className="text-sm text-gray-600 mb-4">
-                Permanently delete your account and all associated data
+                {t('dashboard.settings.deleteDesc')}
               </p>
-              <Button variant="destructive">Delete Account</Button>
+              <Button variant="destructive">{t('dashboard.settings.deleteBtn')}</Button>
             </div>
           </CardContent>
         </Card>

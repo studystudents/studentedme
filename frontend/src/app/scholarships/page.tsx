@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PublicNav } from '@/components/public-nav';
 import { PublicFooter } from '@/components/public-footer';
+import { useLanguage } from '@/lib/i18n';
 
 const scholarships = [
   { name: 'Chevening Scholarship', country: 'UK', amount: 'Full funding', deadline: 'Nov 2025', field: 'All fields', level: 'Masters', desc: 'UK government scholarship for outstanding professionals with leadership potential.' },
@@ -22,6 +23,7 @@ const countries = ['All', 'UK', 'Germany', 'EU', 'USA', 'Australia', 'Netherland
 const levels = ['All', 'Bachelors', 'Masters', 'PhD', 'Graduate'];
 
 export default function ScholarshipsPage() {
+  const { t } = useLanguage();
   const [selectedCountry, setSelectedCountry] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
 
@@ -43,14 +45,14 @@ export default function ScholarshipsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-xs uppercase tracking-widest text-primary mb-8">Scholarships</p>
+            <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('scholarships.badge')}</p>
             <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
-              Fund Your<br />
-              <span className="italic text-primary">Global</span><br />
-              Education.
+              {t('scholarships.hero1')}<br />
+              <span className="italic text-primary">{t('scholarships.hero2')}</span><br />
+              {t('scholarships.hero3')}
             </h1>
             <p className="mt-10 text-xl text-foreground/70 font-light max-w-xl leading-relaxed">
-              Our scholarship specialists have helped students secure over $14M in funding. Explore our curated database of the most impactful scholarships worldwide.
+              {t('scholarships.heroPara')}
             </p>
           </motion.div>
         </section>
@@ -59,7 +61,7 @@ export default function ScholarshipsPage() {
         <section className="py-12 px-6 lg:px-12 border-b border-foreground/10 sticky top-0 bg-background z-10">
           <div className="max-w-[90rem] mx-auto flex flex-wrap gap-8 items-center">
             <div>
-              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">Country</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{t('scholarships.country')}</p>
               <div className="flex flex-wrap gap-2">
                 {countries.map((c) => (
                   <button
@@ -77,7 +79,7 @@ export default function ScholarshipsPage() {
               </div>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">Level</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{t('scholarships.level')}</p>
               <div className="flex flex-wrap gap-2">
                 {levels.map((l) => (
                   <button
@@ -101,7 +103,7 @@ export default function ScholarshipsPage() {
         <section className="py-24 px-6 lg:px-12">
           <div className="max-w-[90rem] mx-auto">
             <p className="text-xs uppercase tracking-widest text-foreground/40 mb-12">
-              {filtered.length} scholarship{filtered.length !== 1 ? 's' : ''} found
+              {filtered.length} {filtered.length !== 1 ? t('scholarships.foundPlural') : t('scholarships.found')}
             </p>
             <div className="space-y-0">
               {filtered.map((s, i) => (
@@ -124,7 +126,7 @@ export default function ScholarshipsPage() {
                     <span className="text-xs text-foreground/40 uppercase tracking-wide">{s.level}</span>
                   </div>
                   <div className="md:col-span-2">
-                    <p className="text-xs uppercase tracking-widest text-foreground/40 mb-1">Deadline</p>
+                    <p className="text-xs uppercase tracking-widest text-foreground/40 mb-1">{t('scholarships.deadline')}</p>
                     <p className="text-sm font-light">{s.deadline}</p>
                   </div>
                   <div className="md:col-span-1 flex items-center justify-end">
@@ -144,13 +146,13 @@ export default function ScholarshipsPage() {
         {/* CTA */}
         <section className="py-24 px-6 lg:px-12 bg-secondary text-secondary-foreground">
           <div className="max-w-[90rem] mx-auto text-center">
-            <h2 className="text-4xl font-serif mb-6">Need help finding the right scholarship?</h2>
+            <h2 className="text-4xl font-serif mb-6">{t('scholarships.ctaTitle')}</h2>
             <p className="text-secondary-foreground/60 font-light text-lg mb-10">
-              Our scholarship specialists review your profile and identify the best matches.
+              {t('scholarships.ctaSub')}
             </p>
             <Link href="/contact">
               <button className="rounded-none border border-secondary-foreground/20 hover:bg-secondary-foreground hover:text-secondary transition-colors px-12 h-14 text-sm tracking-widest uppercase">
-                Talk to a Specialist
+                {t('scholarships.ctaBtn')}
               </button>
             </Link>
           </div>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardLayout } from '@/components/dashboard-layout';
 import { applicationsApi } from '@/lib/api';
+import { useLanguage } from '@/lib/i18n';
 import {
   Plus,
   FileText,
@@ -18,6 +19,8 @@ import {
 import { formatDate } from '@/lib/utils';
 
 export default function ApplicationsPage() {
+  const { t } = useLanguage();
+
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ['applications'],
     queryFn: applicationsApi.getAll,
@@ -25,29 +28,29 @@ export default function ApplicationsPage() {
 
   const getStatusConfig = (status: string) => {
     const configs: Record<string, { icon: any; color: string; label: string }> = {
-      DRAFT: { icon: FileText, color: 'text-gray-600 bg-gray-50', label: 'Draft' },
-      IN_PROGRESS: { icon: Clock, color: 'text-blue-600 bg-blue-50', label: 'In Progress' },
+      DRAFT: { icon: FileText, color: 'text-gray-600 bg-gray-50', label: t('dashboard.applications.statusDraft') },
+      IN_PROGRESS: { icon: Clock, color: 'text-blue-600 bg-blue-50', label: t('dashboard.applications.statusInProgress') },
       DOCUMENTS_PENDING: {
         icon: AlertCircle,
         color: 'text-yellow-600 bg-yellow-50',
-        label: 'Documents Pending',
+        label: t('dashboard.applications.statusDocsPending'),
       },
       READY_FOR_REVIEW: {
         icon: Clock,
         color: 'text-orange-600 bg-orange-50',
-        label: 'Ready for Review',
+        label: t('dashboard.applications.statusReadyReview'),
       },
       SUBMITTED: {
         icon: CheckCircle2,
         color: 'text-green-600 bg-green-50',
-        label: 'Submitted',
+        label: t('dashboard.applications.statusSubmitted'),
       },
       ACCEPTED: {
         icon: CheckCircle2,
         color: 'text-green-700 bg-green-100',
-        label: 'Accepted',
+        label: t('dashboard.applications.statusAccepted'),
       },
-      REJECTED: { icon: XCircle, color: 'text-red-600 bg-red-50', label: 'Rejected' },
+      REJECTED: { icon: XCircle, color: 'text-red-600 bg-red-50', label: t('dashboard.applications.statusRejected') },
     };
     return (
       configs[status] || {
@@ -72,13 +75,13 @@ export default function ApplicationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">My Applications</h1>
-            <p className="text-gray-600 mt-2">Track and manage your university applications</p>
+            <h1 className="text-3xl font-bold">{t('dashboard.applications.title')}</h1>
+            <p className="text-gray-600 mt-2">{t('dashboard.applications.subtitle')}</p>
           </div>
           <Link href="/dashboard/programs">
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
-              New Application
+              {t('dashboard.applications.newBtn')}
             </Button>
           </Link>
         </div>
@@ -89,7 +92,7 @@ export default function ApplicationsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Active</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.applications.active')}</p>
                   <p className="text-3xl font-bold">{groupedApplications.active.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-blue-50">
@@ -103,7 +106,7 @@ export default function ApplicationsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Submitted</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.applications.submitted')}</p>
                   <p className="text-3xl font-bold">{groupedApplications.submitted.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-green-50">
@@ -117,7 +120,7 @@ export default function ApplicationsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Completed</p>
+                  <p className="text-sm text-gray-600 mb-1">{t('dashboard.applications.completed')}</p>
                   <p className="text-3xl font-bold">{groupedApplications.completed.length}</p>
                 </div>
                 <div className="p-3 rounded-full bg-purple-50">
@@ -133,19 +136,19 @@ export default function ApplicationsPage() {
           <Card>
             <CardContent className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading applications...</p>
+              <p className="text-gray-500">{t('dashboard.applications.loading')}</p>
             </CardContent>
           </Card>
         ) : applications.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No applications yet</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('dashboard.applications.noApps')}</h3>
               <p className="text-gray-500 mb-6">
-                Start your journey by browsing programs and creating your first application
+                {t('dashboard.applications.noAppsDesc')}
               </p>
               <Link href="/dashboard/programs">
-                <Button>Browse Programs</Button>
+                <Button>{t('dashboard.applications.browseBtn')}</Button>
               </Link>
             </CardContent>
           </Card>
@@ -155,8 +158,8 @@ export default function ApplicationsPage() {
             {groupedApplications.active.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Active Applications</CardTitle>
-                  <CardDescription>Applications in progress</CardDescription>
+                  <CardTitle>{t('dashboard.applications.activeTitle')}</CardTitle>
+                  <CardDescription>{t('dashboard.applications.activeDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {groupedApplications.active.map((app) => {
@@ -184,7 +187,7 @@ export default function ApplicationsPage() {
                           <div className="flex items-center gap-4">
                             {app.opportunity.deadline && (
                               <div className="text-sm text-gray-500 text-right">
-                                <div className="text-xs text-gray-400">Deadline</div>
+                                <div className="text-xs text-gray-400">{t('dashboard.applications.deadline')}</div>
                                 <div className="font-medium">
                                   {formatDate(app.opportunity.deadline)}
                                 </div>
@@ -210,8 +213,8 @@ export default function ApplicationsPage() {
             {groupedApplications.submitted.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Submitted Applications</CardTitle>
-                  <CardDescription>Waiting for university response</CardDescription>
+                  <CardTitle>{t('dashboard.applications.submittedTitle')}</CardTitle>
+                  <CardDescription>{t('dashboard.applications.submittedDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {groupedApplications.submitted.map((app) => {
@@ -259,8 +262,8 @@ export default function ApplicationsPage() {
             {groupedApplications.completed.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Completed Applications</CardTitle>
-                  <CardDescription>Final decisions received</CardDescription>
+                  <CardTitle>{t('dashboard.applications.completedTitle')}</CardTitle>
+                  <CardDescription>{t('dashboard.applications.completedDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {groupedApplications.completed.map((app) => {

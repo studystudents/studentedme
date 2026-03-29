@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DashboardLayout } from '@/components/dashboard-layout';
 import { applicationsApi, documentsApi } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { useLanguage } from '@/lib/i18n';
 import {
   FileText,
   FolderOpen,
@@ -20,6 +21,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const { data: applications = [], isLoading: appsLoading } = useQuery({
     queryKey: ['applications'],
@@ -33,7 +35,7 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: 'Active Applications',
+      title: t('dashboard.home.activeApps'),
       value: applications.filter((app) =>
         ['DRAFT', 'IN_PROGRESS', 'DOCUMENTS_PENDING'].includes(app.status)
       ).length,
@@ -42,21 +44,21 @@ export default function DashboardPage() {
       bgColor: 'bg-blue-50',
     },
     {
-      title: 'Documents',
+      title: t('dashboard.home.documents'),
       value: documents.length,
       icon: FolderOpen,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
     },
     {
-      title: 'Submitted',
+      title: t('dashboard.home.submittedApps'),
       value: applications.filter((app) => app.status === 'SUBMITTED').length,
       icon: TrendingUp,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
     },
     {
-      title: 'Approved Documents',
+      title: t('dashboard.home.approvedDocs'),
       value: documents.filter((doc) => doc.reviewStatus === 'APPROVED').length,
       icon: CheckCircle2,
       color: 'text-green-600',
@@ -86,10 +88,10 @@ export default function DashboardPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold">
-            Welcome back, {user?.firstName}!
+            {t('dashboard.home.greeting')}, {user?.firstName}!
           </h1>
           <p className="text-gray-600 mt-2">
-            Here&apos;s an overview of your study abroad journey
+            {t('dashboard.home.subtitle')}
           </p>
         </div>
 
@@ -115,26 +117,26 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Get started with your applications</CardDescription>
+            <CardTitle>{t('dashboard.home.quickActions')}</CardTitle>
+            <CardDescription>{t('dashboard.home.quickActionsDesc')}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-4">
             <Link href="/dashboard/programs">
               <Button className="gap-2">
                 <Plus className="h-4 w-4" />
-                Browse Programs
+                {t('dashboard.home.browsePrograms')}
               </Button>
             </Link>
             <Link href="/dashboard/applications">
               <Button variant="outline" className="gap-2">
                 <FileText className="h-4 w-4" />
-                View Applications
+                {t('dashboard.home.viewApplications')}
               </Button>
             </Link>
             <Link href="/dashboard/documents">
               <Button variant="outline" className="gap-2">
                 <FolderOpen className="h-4 w-4" />
-                Upload Documents
+                {t('dashboard.home.uploadDocuments')}
               </Button>
             </Link>
           </CardContent>
@@ -143,17 +145,17 @@ export default function DashboardPage() {
         {/* Recent Applications */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Applications</CardTitle>
-            <CardDescription>Track your application progress</CardDescription>
+            <CardTitle>{t('dashboard.home.recentTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.home.recentDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             {appsLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading...</div>
+              <div className="text-center py-8 text-gray-500">{t('dashboard.home.loading')}</div>
             ) : applications.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">No applications yet</p>
+                <p className="text-gray-500 mb-4">{t('dashboard.home.noApps')}</p>
                 <Link href="/dashboard/programs">
-                  <Button>Browse Programs</Button>
+                  <Button>{t('dashboard.home.browsePrograms')}</Button>
                 </Link>
               </div>
             ) : (
@@ -183,7 +185,7 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-4">
                         {app.opportunity.deadline && (
                           <div className="text-sm text-gray-500">
-                            Due: {formatDate(app.opportunity.deadline)}
+                            {t('dashboard.home.dueLabel')} {formatDate(app.opportunity.deadline)}
                           </div>
                         )}
                         <div
@@ -208,17 +210,17 @@ export default function DashboardPage() {
         {/* Documents Status */}
         <Card>
           <CardHeader>
-            <CardTitle>Document Status</CardTitle>
-            <CardDescription>Keep your documents up to date</CardDescription>
+            <CardTitle>{t('dashboard.home.docStatus')}</CardTitle>
+            <CardDescription>{t('dashboard.home.docStatusDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             {docsLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading...</div>
+              <div className="text-center py-8 text-gray-500">{t('dashboard.home.loading')}</div>
             ) : documents.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">No documents uploaded yet</p>
+                <p className="text-gray-500 mb-4">{t('dashboard.home.noDocsYet')}</p>
                 <Link href="/dashboard/documents">
-                  <Button>Upload Documents</Button>
+                  <Button>{t('dashboard.home.uploadDocsBtn')}</Button>
                 </Link>
               </div>
             ) : (

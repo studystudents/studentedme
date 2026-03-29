@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PublicNav } from '@/components/public-nav';
 import { PublicFooter } from '@/components/public-footer';
+import { useLanguage } from '@/lib/i18n';
 
 const advisors = [
   { name: 'Dr. Amara Osei', role: 'Senior Counselor — Europe', regions: ['UK', 'Germany', 'Netherlands'], langs: 'English, French', years: 14, placements: 320, bio: 'Former Dean of International Admissions at Harvard Extension. Specialist in top-50 European universities and research programs.' },
@@ -16,6 +17,8 @@ const advisors = [
 ];
 
 export default function AdvisorsPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background bg-noise">
       <PublicNav />
@@ -28,13 +31,13 @@ export default function AdvisorsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-xs uppercase tracking-widest text-primary mb-8">Our Team</p>
+            <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('advisors.badge')}</p>
             <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
-              Expert Advisors.<br />
-              <span className="italic text-primary">Real Results.</span>
+              {t('advisors.hero1')}<br />
+              <span className="italic text-primary">{t('advisors.hero2')}</span>
             </h1>
             <p className="mt-10 text-xl text-foreground/70 font-light max-w-xl leading-relaxed">
-              Our counselors are former university admissions officers, scholars, and education specialists — not just consultants. They have lived the experience they guide you through.
+              {t('advisors.heroPara')}
             </p>
           </motion.div>
         </section>
@@ -43,10 +46,10 @@ export default function AdvisorsPage() {
         <section className="py-16 px-6 lg:px-12 border-b border-foreground/10">
           <div className="max-w-[90rem] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { num: '6', label: 'Expert Advisors' },
-              { num: '10+', label: 'Languages Spoken' },
-              { num: '50+', label: 'Countries Covered' },
-              { num: '1,600+', label: 'Students Placed' },
+              { num: '6', label: t('advisors.advisors') },
+              { num: '10+', label: t('advisors.languages') },
+              { num: '50+', label: t('advisors.countries') },
+              { num: '1,600+', label: t('advisors.placed') },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-5xl font-serif text-foreground mb-2">{stat.num}</div>
@@ -73,7 +76,7 @@ export default function AdvisorsPage() {
                     {advisor.name[0]}
                   </div>
                   <span className="text-xs uppercase tracking-widest text-foreground/30 border border-foreground/10 px-3 py-1">
-                    {advisor.years} yrs
+                    {advisor.years} {t('advisors.yrs')}
                   </span>
                 </div>
                 <div>
@@ -99,11 +102,11 @@ export default function AdvisorsPage() {
         <section className="py-24 px-6 lg:px-12 bg-primary">
           <div className="max-w-[90rem] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
             <h2 className="text-4xl md:text-5xl font-serif text-primary-foreground max-w-xl">
-              Ready to be matched with your advisor?
+              {t('advisors.ctaTitle')}
             </h2>
             <Link href="/register">
               <button className="rounded-none bg-primary-foreground text-primary hover:opacity-90 transition-opacity px-12 h-14 text-sm tracking-widest uppercase flex items-center gap-2 group">
-                Get Started
+                {t('advisors.ctaBtn')}
                 <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
             </Link>

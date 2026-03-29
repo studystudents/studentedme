@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PublicNav } from '@/components/public-nav';
 import { PublicFooter } from '@/components/public-footer';
+import { useLanguage } from '@/lib/i18n';
 
 const positions = [
   { title: 'Senior Education Counselor', dept: 'Counseling', location: 'Boston, MA', type: 'Full-time', desc: 'Guide students through the international application process and help them achieve their academic goals.', reqs: ['5+ years counseling experience', 'International education expertise', 'Strong communication skills'] },
@@ -25,6 +26,8 @@ const benefits = [
 ];
 
 export default function CareersPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-background bg-noise">
       <PublicNav />
@@ -37,13 +40,13 @@ export default function CareersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <p className="text-xs uppercase tracking-widest text-primary mb-8">Careers</p>
+            <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('careers.badge')}</p>
             <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
-              Join Our<br />
-              <span className="italic text-primary">Mission.</span>
+              {t('careers.hero1')}<br />
+              <span className="italic text-primary">{t('careers.hero2')}</span>
             </h1>
             <p className="mt-10 text-xl text-foreground/70 font-light max-w-xl leading-relaxed">
-              Help us democratize access to global education. Build technology and services that transform lives for thousands of students worldwide.
+              {t('careers.heroPara')}
             </p>
           </motion.div>
         </section>
@@ -52,9 +55,9 @@ export default function CareersPage() {
         <section className="py-20 px-6 lg:px-12 bg-secondary text-secondary-foreground">
           <div className="max-w-[90rem] mx-auto grid grid-cols-3 gap-8 max-w-2xl">
             {[
-              { num: '50+', label: 'Team Members' },
-              { num: '15+', label: 'Countries Represented' },
-              { num: '4.8/5', label: 'Glassdoor Rating' },
+              { num: '50+', label: t('careers.teamMembers') },
+              { num: '15+', label: t('careers.countries') },
+              { num: '4.8/5', label: t('careers.rating') },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-5xl font-serif mb-2">{stat.num}</div>
@@ -68,8 +71,8 @@ export default function CareersPage() {
         <section className="py-32 px-6 lg:px-12">
           <div className="max-w-[90rem] mx-auto">
             <div className="border-t border-foreground/10 pt-12 mb-20">
-              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">Why Join Us</p>
-              <h2 className="text-5xl font-serif">What We Offer</h2>
+              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">{t('careers.benefitsLabel')}</p>
+              <h2 className="text-5xl font-serif">{t('careers.benefitsTitle')}</h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0">
               {benefits.map((b, i) => (
@@ -94,8 +97,8 @@ export default function CareersPage() {
         <section className="py-32 px-6 lg:px-12 bg-muted">
           <div className="max-w-[90rem] mx-auto">
             <div className="mb-20">
-              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">Now Hiring</p>
-              <h2 className="text-5xl font-serif">Open Positions</h2>
+              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">{t('careers.openLabel')}</p>
+              <h2 className="text-5xl font-serif">{t('careers.openTitle')}</h2>
             </div>
             <div className="space-y-0">
               {positions.map((pos, i) => (
@@ -122,7 +125,7 @@ export default function CareersPage() {
                   </div>
                   <Link href="/contact">
                     <button className="rounded-none border border-foreground/20 hover:bg-foreground hover:text-background transition-colors px-8 h-12 text-sm tracking-widest uppercase flex items-center gap-2 group/btn">
-                      Apply
+                      {t('careers.apply')}
                       <ArrowUpRight className="h-4 w-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                     </button>
                   </Link>
@@ -136,13 +139,13 @@ export default function CareersPage() {
         {/* CTA */}
         <section className="py-24 px-6 lg:px-12">
           <div className="max-w-[90rem] mx-auto text-center">
-            <h2 className="text-4xl font-serif mb-6">Don't see the right role?</h2>
+            <h2 className="text-4xl font-serif mb-6">{t('careers.noRole')}</h2>
             <p className="text-lg text-foreground/60 font-light mb-10">
-              We're always looking for talented people who share our mission.
+              {t('careers.noRoleSub')}
             </p>
             <Link href="/contact">
               <button className="rounded-none bg-foreground text-background hover:bg-foreground/90 px-12 h-14 text-sm tracking-widest uppercase transition-colors">
-                Get in Touch
+                {t('careers.getInTouch')}
               </button>
             </Link>
           </div>
