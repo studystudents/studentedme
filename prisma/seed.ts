@@ -5,15 +5,12 @@ import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding database with demo data...');
+  console.log('🌱 Seeding database...');
 
-  // Clear existing data (in development only!)
   console.log('Clearing existing data...');
   await prisma.$executeRaw`TRUNCATE TABLE "users", "institutions", "opportunities", "documents", "applications" RESTART IDENTITY CASCADE`;
 
   // Create demo users
-  console.log('Creating demo users...');
-
   const hashedPassword = await bcrypt.hash('Demo123!', 12);
 
   const demoStudent = await prisma.user.create({
@@ -32,9 +29,7 @@ async function main() {
         },
       },
     },
-    include: {
-      student: true,
-    },
+    include: { student: true },
   });
 
   const demoCounselor = await prisma.user.create({
@@ -51,412 +46,332 @@ async function main() {
         },
       },
     },
-    include: {
-      staff: true,
-    },
+    include: { staff: true },
   });
 
   console.log('✅ Created demo users');
 
-  // Create institutions
+  // ============================================================
+  // INSTITUTIONS (70)
+  // ============================================================
   console.log('Creating institutions...');
-
-  const institutions = [
-    {
-      name: 'Harvard University',
-      slug: 'harvard-university',
-      country: 'USA',
-      city: 'Cambridge',
-      ranking: 1,
-      logo: 'https://upload.wikimedia.org/wikipedia/en/2/29/Harvard_shield_wreath.svg',
-    },
-    {
-      name: 'Stanford University',
-      slug: 'stanford-university',
-      country: 'USA',
-      city: 'Stanford',
-      ranking: 2,
-      logo: 'https://identity.stanford.edu/wp-content/uploads/sites/3/2020/07/block-s-right.png',
-    },
-    {
-      name: 'MIT',
-      slug: 'mit',
-      country: 'USA',
-      city: 'Cambridge',
-      ranking: 3,
-      logo: 'https://web.mit.edu/graphicidentity/images/mit-logo.svg',
-    },
-    {
-      name: 'University of Oxford',
-      slug: 'university-of-oxford',
-      country: 'UK',
-      city: 'Oxford',
-      ranking: 4,
-      logo: 'https://www.ox.ac.uk/sites/files/oxford/styles/ow_large/public/field/field_image_main/Oxford%20logo.jpg',
-    },
-    {
-      name: 'University of Cambridge',
-      slug: 'university-of-cambridge',
-      country: 'UK',
-      city: 'Cambridge',
-      ranking: 5,
-      logo: 'https://www.cam.ac.uk/sites/www.cam.ac.uk/themes/fresh/images/interface/cambridge_university2.svg',
-    },
-    {
-      name: 'ETH Zurich',
-      slug: 'eth-zurich',
-      country: 'Switzerland',
-      city: 'Zurich',
-      ranking: 6,
-      logo: 'https://ethz.ch/etc/designs/ethz/img/header/ethz_logo_black.svg',
-    },
-    {
-      name: 'University of Toronto',
-      slug: 'university-of-toronto',
-      country: 'Canada',
-      city: 'Toronto',
-      ranking: 18,
-      logo: 'https://www.utoronto.ca/sites/default/files/UofT-Logo.svg',
-    },
-    {
-      name: 'University of Melbourne',
-      slug: 'university-of-melbourne',
-      country: 'Australia',
-      city: 'Melbourne',
-      ranking: 14,
-      logo: 'https://www.unimelb.edu.au/__data/assets/image/0006/3395535/logo.svg',
-    },
-    {
-      name: 'Technical University of Munich',
-      slug: 'technical-university-of-munich',
-      country: 'Germany',
-      city: 'Munich',
-      ranking: 50,
-      logo: 'https://www.tum.de/typo3conf/ext/tum_base_template/Resources/Public/Images/tum-logo.svg',
-    },
-    {
-      name: 'National University of Singapore',
-      slug: 'national-university-of-singapore',
-      country: 'Singapore',
-      city: 'Singapore',
-      ranking: 11,
-      logo: 'https://nus.edu.sg/images/default-source/identity-images/NUS_logo_full-horizontal.jpg',
-    },
+  const institutionData = [
+    { name: 'Politecnico di Milano', slug: 'politecnico-di-milano', country: 'Italy', city: 'Milan', website: 'https://polimi.it', ranking: 98 },
+    { name: 'University of Bologna', slug: 'university-of-bologna', country: 'Italy', city: 'Bologna', website: 'https://unibo.it', ranking: 154 },
+    { name: 'Sapienza University of Rome', slug: 'sapienza-university-of-rome', country: 'Italy', city: 'Rome', website: 'https://uniroma1.it', ranking: 128 },
+    { name: 'University of Padua', slug: 'university-of-padua', country: 'Italy', city: 'Padua', website: 'https://unipd.it', ranking: 233 },
+    { name: 'Politecnico di Torino', slug: 'politecnico-di-torino', country: 'Italy', city: 'Turin', website: 'https://polito.it', ranking: 252 },
+    { name: 'University of Milan', slug: 'university-of-milan', country: 'Italy', city: 'Milan', website: 'https://unimi.it', ranking: 276 },
+    { name: 'University of Pisa', slug: 'university-of-pisa', country: 'Italy', city: 'Pisa', website: 'https://unipi.it', ranking: 349 },
+    { name: 'University of Florence', slug: 'university-of-florence', country: 'Italy', city: 'Florence', website: 'https://unifi.it', ranking: 404 },
+    { name: 'University of Trento', slug: 'university-of-trento', country: 'Italy', city: 'Trento', website: 'https://unitn.it', ranking: 429 },
+    { name: 'University of Siena', slug: 'university-of-siena', country: 'Italy', city: 'Siena', website: 'https://unisi.it', ranking: 607 },
+    { name: 'RWTH Aachen University', slug: 'rwth-aachen-university', country: 'Germany', city: 'Aachen', website: 'https://rwth-aachen.de', ranking: 105 },
+    { name: 'TU Munich (TUM)', slug: 'tu-munich', country: 'Germany', city: 'Munich', website: 'https://tum.de', ranking: 22 },
+    { name: 'Humboldt University Berlin', slug: 'humboldt-university-berlin', country: 'Germany', city: 'Berlin', website: 'https://hu-berlin.de', ranking: 130 },
+    { name: 'University of Warsaw', slug: 'university-of-warsaw', country: 'Poland', city: 'Warsaw', website: 'https://uw.edu.pl', ranking: 271 },
+    { name: 'Jagiellonian University', slug: 'jagiellonian-university', country: 'Poland', city: 'Krakow', website: 'https://uj.edu.pl', ranking: 303 },
+    { name: 'Warsaw University of Technology', slug: 'warsaw-university-of-technology', country: 'Poland', city: 'Warsaw', website: 'https://pw.edu.pl', ranking: 487 },
+    { name: 'Wroclaw Univ. of Science', slug: 'wroclaw-univ-of-science', country: 'Poland', city: 'Wroclaw', website: 'https://pwr.edu.pl', ranking: 900 },
+    { name: 'Charles University', slug: 'charles-university', country: 'Czech Republic', city: 'Prague', website: 'https://cuni.cz', ranking: 265 },
+    { name: 'Masaryk University', slug: 'masaryk-university', country: 'Czech Republic', city: 'Brno', website: 'https://muni.cz', ranking: 400 },
+    { name: 'Czech Technical University', slug: 'czech-technical-university', country: 'Czech Republic', city: 'Prague', website: 'https://cvut.cz', ranking: 454 },
+    { name: 'Nazarbayev University', slug: 'nazarbayev-university', country: 'Kazakhstan', city: 'Astana', website: 'https://nu.edu.kz', ranking: 301 },
+    { name: 'Al-Farabi KazNU', slug: 'al-farabi-kaznu', country: 'Kazakhstan', city: 'Almaty', website: 'https://kaznu.kz', ranking: 230 },
+    { name: 'ENU', slug: 'enu', country: 'Kazakhstan', city: 'Astana', website: 'https://enu.kz', ranking: 355 },
+    { name: 'University of Hong Kong', slug: 'university-of-hong-kong', country: 'Hong Kong', city: 'Hong Kong', website: 'https://hku.hk', ranking: 11 },
+    { name: 'City University of Hong Kong', slug: 'city-university-of-hong-kong', country: 'Hong Kong', city: 'Hong Kong', website: 'https://cityu.edu.hk', ranking: 70 },
+    { name: 'University of Malaya', slug: 'university-of-malaya', country: 'Malaysia', city: 'Kuala Lumpur', website: 'https://um.edu.my', ranking: 65 },
+    { name: 'Sunway University', slug: 'sunway-university', country: 'Malaysia', city: 'Petaling Jaya', website: 'https://sunway.edu.my', ranking: 410 },
+    { name: 'National Tech. Univ. of Athens', slug: 'national-tech-univ-of-athens', country: 'Greece', city: 'Athens', website: 'https://ntua.gr', ranking: 347 },
+    { name: 'University of Crete', slug: 'university-of-crete', country: 'Greece', city: 'Heraklion', website: 'https://uoc.gr', ranking: 534 },
+    { name: 'Aristotle Univ. Thessaloniki', slug: 'aristotle-univ-thessaloniki', country: 'Greece', city: 'Thessaloniki', website: 'https://auth.gr', ranking: 485 },
+    { name: 'Aalto University', slug: 'aalto-university', country: 'Finland', city: 'Espoo', website: 'https://aalto.fi', ranking: 114 },
+    { name: 'University of Helsinki', slug: 'university-of-helsinki', country: 'Finland', city: 'Helsinki', website: 'https://helsinki.fi', ranking: 116 },
+    { name: 'Lund University', slug: 'lund-university', country: 'Sweden', city: 'Lund', website: 'https://lunduniversity.lu.se', ranking: 72 },
+    { name: 'Stockholm University', slug: 'stockholm-university', country: 'Sweden', city: 'Stockholm', website: 'https://su.se', ranking: 118 },
+    { name: 'University of Tartu', slug: 'university-of-tartu', country: 'Estonia', city: 'Tartu', website: 'https://ut.ee', ranking: 358 },
+    { name: 'Tallinn University of Tech', slug: 'tallinn-university-of-tech', country: 'Estonia', city: 'Tallinn', website: 'https://taltech.ee', ranking: 651 },
+    { name: 'Middle East Technical Univ', slug: 'middle-east-technical-univ', country: 'Turkey', city: 'Ankara', website: 'https://metu.edu.tr', ranking: 336 },
+    { name: 'Istanbul Technical Univ', slug: 'istanbul-technical-univ', country: 'Turkey', city: 'Istanbul', website: 'https://itu.edu.tr', ranking: 298 },
+    { name: 'University of Amsterdam', slug: 'university-of-amsterdam', country: 'Netherlands', city: 'Amsterdam', website: 'https://uva.nl', ranking: 53 },
+    { name: 'Erasmus Univ. Rotterdam', slug: 'erasmus-univ-rotterdam', country: 'Netherlands', city: 'Rotterdam', website: 'https://eur.nl', ranking: 176 },
+    { name: 'Maastricht University', slug: 'maastricht-university', country: 'Netherlands', city: 'Maastricht', website: 'https://maastrichtuniversity.nl', ranking: 239 },
+    { name: 'KU Leuven', slug: 'ku-leuven', country: 'Belgium', city: 'Leuven', website: 'https://kuleuven.be', ranking: 61 },
+    { name: 'Ghent University', slug: 'ghent-university', country: 'Belgium', city: 'Ghent', website: 'https://ugent.be', ranking: 162 },
+    { name: 'University of Vienna', slug: 'university-of-vienna', country: 'Austria', city: 'Vienna', website: 'https://univie.ac.at', ranking: 130 },
+    { name: 'TU Wien', slug: 'tu-wien', country: 'Austria', city: 'Vienna', website: 'https://tuwien.at', ranking: 197 },
+    { name: 'University of Barcelona', slug: 'university-of-barcelona', country: 'Spain', city: 'Barcelona', website: 'https://ub.edu', ranking: 160 },
+    { name: 'Autonomous Univ. Madrid', slug: 'autonomous-univ-madrid', country: 'Spain', city: 'Madrid', website: 'https://uam.es', ranking: 206 },
+    { name: 'University of Lisbon', slug: 'university-of-lisbon', country: 'Portugal', city: 'Lisbon', website: 'https://ulisboa.pt', ranking: 266 },
+    { name: 'University of Porto', slug: 'university-of-porto', country: 'Portugal', city: 'Porto', website: 'https://up.pt', ranking: 253 },
+    { name: 'Trinity College Dublin', slug: 'trinity-college-dublin', country: 'Ireland', city: 'Dublin', website: 'https://tcd.ie', ranking: 81 },
+    { name: 'University College Dublin', slug: 'university-college-dublin', country: 'Ireland', city: 'Dublin', website: 'https://ucd.ie', ranking: 171 },
+    { name: 'Chulalongkorn University', slug: 'chulalongkorn-university', country: 'Thailand', city: 'Bangkok', website: 'https://chula.ac.th', ranking: 211 },
+    { name: 'Tsinghua University', slug: 'tsinghua-university', country: 'China', city: 'Beijing', website: 'https://tsinghua.edu.cn', ranking: 25 },
+    { name: 'Zhejiang University', slug: 'zhejiang-university', country: 'China', city: 'Hangzhou', website: 'https://zju.edu.cn', ranking: 44 },
+    { name: 'KAIST', slug: 'kaist', country: 'South Korea', city: 'Daejeon', website: 'https://kaist.ac.kr', ranking: 56 },
+    { name: 'Kyoto University', slug: 'kyoto-university', country: 'Japan', city: 'Kyoto', website: 'https://kyoto-u.ac.jp', ranking: 57 },
+    { name: 'University of Sydney', slug: 'university-of-sydney', country: 'Australia', city: 'Sydney', website: 'https://sydney.edu.au', ranking: 19 },
+    { name: 'Univ. of New South Wales', slug: 'univ-of-new-south-wales', country: 'Australia', city: 'Sydney', website: 'https://unsw.edu.au', ranking: 20 },
+    { name: 'University of Toronto', slug: 'university-of-toronto', country: 'Canada', city: 'Toronto', website: 'https://utoronto.ca', ranking: 21 },
+    { name: 'McGill University', slug: 'mcgill-university', country: 'Canada', city: 'Montreal', website: 'https://mcgill.ca', ranking: 30 },
+    { name: 'Massachusetts Institute of Technology (MIT)', slug: 'massachusetts-institute-of-technology', country: 'USA', city: 'Cambridge', website: 'https://mit.edu', ranking: 1 },
+    { name: 'Imperial College London', slug: 'imperial-college-london', country: 'UK', city: 'London', website: 'https://imperial.ac.uk', ranking: 2 },
+    { name: 'Stanford University', slug: 'stanford-university', country: 'USA', city: 'Stanford', website: 'https://stanford.edu', ranking: 3 },
+    { name: 'University of Oxford', slug: 'university-of-oxford', country: 'UK', city: 'Oxford', website: 'https://ox.ac.uk', ranking: 4 },
+    { name: 'Harvard University', slug: 'harvard-university', country: 'USA', city: 'Cambridge', website: 'https://harvard.edu', ranking: 5 },
+    { name: 'University of Cambridge', slug: 'university-of-cambridge', country: 'UK', city: 'Cambridge', website: 'https://cam.ac.uk', ranking: 6 },
+    { name: 'ETH Zurich', slug: 'eth-zurich', country: 'Switzerland', city: 'Zurich', website: 'https://ethz.ch', ranking: 7 },
+    { name: 'National University of Singapore', slug: 'national-university-of-singapore', country: 'Singapore', city: 'Singapore', website: 'https://nus.edu.sg', ranking: 8 },
+    { name: 'University College London (UCL)', slug: 'university-college-london', country: 'UK', city: 'London', website: 'https://ucl.ac.uk', ranking: 9 },
+    { name: 'California Institute of Technology (Caltech)', slug: 'california-institute-of-technology', country: 'USA', city: 'Pasadena', website: 'https://caltech.edu', ranking: 10 },
   ];
 
-  const createdInstitutions = [];
-  for (const inst of institutions) {
+  const institutionMap: Record<string, string> = {};
+  for (const inst of institutionData) {
     const created = await prisma.institution.create({ data: inst });
-    createdInstitutions.push(created);
+    institutionMap[created.slug] = created.id;
   }
 
-  console.log('✅ Created institutions');
+  console.log(`✅ Created ${Object.keys(institutionMap).length} institutions`);
 
-  // Create university programs
-  console.log('Creating university programs...');
-
-  const programs = [
-    // Computer Science programs
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[0].id,
-      name: 'Master of Science in Computer Science',
-      slug: 'harvard-ms-cs',
-      country: 'USA',
-      city: 'Cambridge',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Computer Science',
-      durationMonths: 24,
-      tuitionFee: 54768,
-      currency: 'USD',
-      description: 'Advanced CS program covering AI, ML, and distributed systems',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[1].id,
-      name: 'MS in Artificial Intelligence',
-      slug: 'stanford-ms-ai',
-      country: 'USA',
-      city: 'Stanford',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Artificial Intelligence',
-      durationMonths: 24,
-      tuitionFee: 57693,
-      currency: 'USD',
-      description: 'Cutting-edge AI research and applications',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[2].id,
-      name: 'Master of Engineering in Computer Science',
-      slug: 'mit-meng-cs',
-      country: 'USA',
-      city: 'Cambridge',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Computer Science',
-      durationMonths: 12,
-      tuitionFee: 77020,
-      currency: 'USD',
-      description: 'Intensive one-year program for top students',
-      intakeSeason: 'Fall 2026',
-    },
-    // Business programs
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[0].id,
-      name: 'MBA',
-      slug: 'harvard-mba',
-      country: 'USA',
-      city: 'Cambridge',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Business Administration',
-      durationMonths: 24,
-      tuitionFee: 73440,
-      currency: 'USD',
-      description: 'World-renowned MBA program',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[3].id,
-      name: 'Master in Business Administration',
-      slug: 'oxford-mba',
-      country: 'UK',
-      city: 'Oxford',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Business Administration',
-      durationMonths: 12,
-      tuitionFee: 67715,
-      currency: 'GBP',
-      description: 'One-year full-time MBA',
-      intakeSeason: 'Fall 2026',
-    },
-    // Engineering programs
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[5].id,
-      name: 'MSc in Mechanical Engineering',
-      slug: 'eth-msc-mechanical',
-      country: 'Switzerland',
-      city: 'Zurich',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Mechanical Engineering',
-      durationMonths: 24,
-      tuitionFee: 1298,
-      currency: 'CHF',
-      description: 'Top-ranked engineering program in Europe',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[8].id,
-      name: 'Master in Automotive Engineering',
-      slug: 'tum-automotive',
-      country: 'Germany',
-      city: 'Munich',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Automotive Engineering',
-      durationMonths: 24,
-      tuitionFee: 0,
-      currency: 'EUR',
-      description: 'Tuition-free program in Germany',
-      intakeSeason: 'Fall 2026',
-    },
-    // Data Science programs
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[1].id,
-      name: 'MS in Data Science',
-      slug: 'stanford-ms-data-science',
-      country: 'USA',
-      city: 'Stanford',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Data Science',
-      durationMonths: 18,
-      tuitionFee: 57693,
-      currency: 'USD',
-      description: 'Applied data science with industry projects',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[6].id,
-      name: 'Master of Data Science',
-      slug: 'toronto-mds',
-      country: 'Canada',
-      city: 'Toronto',
-      degreeLevel: 'MASTER',
-      fieldOfStudy: 'Data Science',
-      durationMonths: 12,
-      tuitionFee: 42000,
-      currency: 'CAD',
-      description: 'Professional program with co-op',
-      intakeSeason: 'Fall 2026',
-    },
-    // PhD programs
-    {
-      type: 'PROGRAM',
-      institutionId: createdInstitutions[2].id,
-      name: 'PhD in Computer Science',
-      slug: 'mit-phd-cs',
-      country: 'USA',
-      city: 'Cambridge',
-      degreeLevel: 'DOCTORATE',
-      fieldOfStudy: 'Computer Science',
-      durationMonths: 60,
-      tuitionFee: 0,
-      currency: 'USD',
-      description: 'Fully funded PhD with stipend',
-      intakeSeason: 'Fall 2026',
-    },
+  // ============================================================
+  // PROGRAMS (157)
+  // ============================================================
+  console.log('Creating programs...');
+  const programsData = [
+    { type: 'PROGRAM' as const, institutionSlug: 'massachusetts-institute-of-technology', name: 'MSc Computer Science', slug: 'massachusetts-institute-of-technology-msc-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 59750.0, applicationFee: 150.0, currency: 'USD', intakeSeason: 'Autumn 2025 / Spring 2026', websiteUrl: 'https://mit.edu', description: 'Top-tier MS degree with research-focused curriculum covering theory, systems, and AI' },
+    { type: 'PROGRAM' as const, institutionSlug: 'stanford-university', name: 'MSc Computer Science', slug: 'stanford-university-msc-computer-science', country: 'United States', city: 'Stanford', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 63548.0, applicationFee: 125.0, currency: 'USD', intakeSeason: 'Autumn 2025 / Spring 2026', websiteUrl: 'https://stanford.edu', description: 'Comprehensive MS program with focus on systems, AI, theory and applications' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-oxford', name: 'MSc Advanced Computer Science', slug: 'university-of-oxford-msc-advanced-computer-science', country: 'United Kingdom', city: 'Oxford', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 12, tuitionFee: 27500.0, applicationFee: 75.0, currency: 'GBP', intakeSeason: 'Autumn 2025', websiteUrl: 'https://ox.ac.uk', description: 'Advanced MSc covering AI, systems, and theory of computing' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-cambridge', name: 'MSc Computer Science', slug: 'university-of-cambridge-msc-computer-science', country: 'United Kingdom', city: 'Cambridge', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 12, tuitionFee: 26200.0, applicationFee: 90.0, currency: 'GBP', intakeSeason: 'October 2025', websiteUrl: 'https://cam.ac.uk', description: 'Research-focused CS program covering algorithms, AI and systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'eth-zurich', name: 'MSc Computer Science', slug: 'eth-zurich-msc-computer-science', country: 'Switzerland', city: 'Zurich', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1250.0, applicationFee: 100.0, currency: 'CHF', intakeSeason: 'Autumn 2025 / Spring 2026', websiteUrl: 'https://ethz.ch', description: 'World-leading CS program with strong research focus and low tuition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'harvard-university', name: 'MSc Advanced Computer Science', slug: 'harvard-university-msc-advanced-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 62000.0, applicationFee: 160.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://harvard.edu', description: 'Harvard\'s prestigious CS program with research emphasis' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-munich', name: 'MSc Informatik', slug: 'tu-munich-tum-msc-informatik', country: 'Germany', city: 'Munich', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 24000.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'Winter 2025 / Summer 2026', websiteUrl: 'https://tum.de', description: 'World-class CS program in Germany with affordable tuition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'imperial-college-london', name: 'MSc Artificial Intelligence', slug: 'imperial-college-london-msc-artificial-intelligence', country: 'United Kingdom', city: 'London', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 12, tuitionFee: 28500.0, applicationFee: 85.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://imperial.ac.uk', description: 'Specialist AI program covering deep learning, NLP and robotics' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-college-london', name: 'MSc Computer Science', slug: 'university-college-london-msc-computer-science', country: 'United Kingdom', city: 'London', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 12, tuitionFee: 27500.0, applicationFee: 80.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://ucl.ac.uk', description: 'Leading UK program combining theory and applications' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-university-of-singapore', name: 'MSc Artificial Intelligence', slug: 'national-university-of-singapore-msc-artificial-intelligence', country: 'Singapore', city: 'Singapore', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 24, tuitionFee: 22500.0, applicationFee: 85.0, currency: 'SGD', intakeSeason: 'August 2025 / January 2026', websiteUrl: 'https://nus.edu.sg', description: 'Specialized AI program covering ML, deep learning and NLP' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-toronto', name: 'MSc Computer Science', slug: 'university-of-toronto-msc-computer-science', country: 'Canada', city: 'Toronto', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 44520.0, applicationFee: 100.0, currency: 'CAD', intakeSeason: 'September 2025', websiteUrl: 'https://utoronto.ca', description: 'Top Canadian CS program with strong tech industry connections' },
+    { type: 'PROGRAM' as const, institutionSlug: 'mcgill-university', name: 'MSc Computer Science', slug: 'mcgill-university-msc-computer-science', country: 'Canada', city: 'Montreal', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 42000.0, applicationFee: 95.0, currency: 'CAD', intakeSeason: 'September 2025 / January 2026', websiteUrl: 'https://mcgill.ca', description: 'Comprehensive CS with specializations in AI and systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-amsterdam', name: 'MSc Artificial Intelligence', slug: 'university-of-amsterdam-msc-artificial-intelligence', country: 'Netherlands', city: 'Amsterdam', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 12, tuitionFee: 2000.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uva.nl', description: 'Deep learning, NLP and reinforcement learning specialization' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ku-leuven', name: 'MSc Computer Science', slug: 'ku-leuven-msc-computer-science', country: 'Belgium', city: 'Leuven', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2200.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://kuleuven.be', description: 'Top-ranked Belgian program with algorithms and software focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'rwth-aachen-university', name: 'MSc Cybersecurity', slug: 'rwth-aachen-university-msc-cybersecurity', country: 'Germany', city: 'Aachen', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Cybersecurity', language: 'English', durationMonths: 24, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'Winter 2025 / Summer 2026', websiteUrl: 'https://rwth-aachen.de', description: 'Cybersecurity at German top university with no tuition fees' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-vienna', name: 'MSc Computer Science', slug: 'university-of-vienna-msc-computer-science', country: 'Austria', city: 'Vienna', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2000.0, applicationFee: 80.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://univie.ac.at', description: 'CS program in Austria with focus on AI and distributed systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'aalto-university', name: 'MSc Cybersecurity', slug: 'aalto-university-msc-cybersecurity', country: 'Finland', city: 'Espoo', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Cybersecurity', language: 'English', durationMonths: 24, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'August 2025', websiteUrl: 'https://aalto.fi', description: 'Network security and cryptography in Finland' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-helsinki', name: 'MSc Data Science', slug: 'university-of-helsinki-msc-data-science', country: 'Finland', city: 'Helsinki', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Data Science', language: 'English', durationMonths: 24, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'August 2025', websiteUrl: 'https://helsinki.fi', description: 'Data science program in Finland with no tuition fees' },
+    { type: 'PROGRAM' as const, institutionSlug: 'lund-university', name: 'MSc Computer Science', slug: 'lund-university-msc-computer-science', country: 'Sweden', city: 'Lund', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 0.0, applicationFee: 65.0, currency: 'SEK', intakeSeason: 'August 2025', websiteUrl: 'https://lunduniversity.lu.se', description: 'Swedish top CS program with no tuition fees' },
+    { type: 'PROGRAM' as const, institutionSlug: 'stockholm-university', name: 'MSc Computer Science', slug: 'stockholm-university-msc-computer-science', country: 'Sweden', city: 'Stockholm', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 0.0, applicationFee: 65.0, currency: 'SEK', intakeSeason: 'August 2025', websiteUrl: 'https://su.se', description: 'Swedish program with focus on systems and theory' },
+    { type: 'PROGRAM' as const, institutionSlug: 'politecnico-di-milano', name: 'MSc Software Engineering', slug: 'politecnico-di-milano-msc-software-engineering', country: 'Italy', city: 'Milan', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Software Engineering', language: 'English', durationMonths: 24, tuitionFee: 3800.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://polimi.it', description: 'Top-ranked Italian program with software architecture focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-bologna', name: 'MSc Computer Science', slug: 'university-of-bologna-msc-computer-science', country: 'Italy', city: 'Bologna', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3400.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unibo.it', description: 'Ancient university with modern CS program and research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-padua', name: 'MSc Computer Science', slug: 'university-of-padua-msc-computer-science', country: 'Italy', city: 'Padua', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3200.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unipd.it', description: 'Historical Italian university with modern CS curriculum' },
+    { type: 'PROGRAM' as const, institutionSlug: 'politecnico-di-torino', name: 'MSc Information Engineering', slug: 'politecnico-di-torino-msc-information-engineering', country: 'Italy', city: 'Turin', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Information Engineering', language: 'English', durationMonths: 24, tuitionFee: 3000.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://polito.it', description: 'Combining computer science and information engineering' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-pisa', name: 'MSc Computer Science', slug: 'university-of-pisa-msc-computer-science', country: 'Italy', city: 'Pisa', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2800.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unipi.it', description: 'Program with focus on theory and applications of CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-milan', name: 'MSc Artificial Intelligence', slug: 'university-of-milan-msc-artificial-intelligence', country: 'Italy', city: 'Milan', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 24, tuitionFee: 3500.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unimi.it', description: 'Specialized AI program covering ML and deep learning' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-trento', name: 'MSc Computer Science', slug: 'university-of-trento-msc-computer-science', country: 'Italy', city: 'Trento', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2800.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unitn.it', description: 'Northern Italian program with focus on distributed systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kaist', name: 'MSc Computer Science', slug: 'kaist-msc-computer-science', country: 'South Korea', city: 'Daejeon', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 9000.0, applicationFee: 80.0, currency: 'KRW', intakeSeason: 'March 2026 / September 2025', websiteUrl: 'https://kaist.ac.kr', description: 'Top Korean institute with cutting-edge AI research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tsinghua-university', name: 'MSc Computer Science', slug: 'tsinghua-university-msc-computer-science', country: 'China', city: 'Beijing', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 8000.0, applicationFee: 65.0, currency: 'CNY', intakeSeason: 'September 2025 / March 2026', websiteUrl: 'https://tsinghua.edu.cn', description: 'Leading Chinese CS program with AI and distributed systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'zhejiang-university', name: 'MSc Computer Science', slug: 'zhejiang-university-msc-computer-science', country: 'China', city: 'Hangzhou', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 7500.0, applicationFee: 70.0, currency: 'CNY', intakeSeason: 'September 2025', websiteUrl: 'https://zju.edu.cn', description: 'Top Chinese CS program with research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kyoto-university', name: 'MSc Computer Science', slug: 'kyoto-university-msc-computer-science', country: 'Japan', city: 'Kyoto', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 5000.0, applicationFee: 80.0, currency: 'JPY', intakeSeason: 'April 2026 / October 2025', websiteUrl: 'https://kyoto-u.ac.jp', description: 'Japan\'s historical university with research-focused CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-hong-kong', name: 'MSc Computer Science', slug: 'university-of-hong-kong-msc-computer-science', country: 'Hong Kong', city: 'Hong Kong', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 18000.0, applicationFee: 100.0, currency: 'HKD', intakeSeason: 'September 2025', websiteUrl: 'https://hku.hk', description: 'Top-ranked Asian CS program in Hong Kong' },
+    { type: 'PROGRAM' as const, institutionSlug: 'city-university-of-hong-kong', name: 'MSc Information Technology', slug: 'city-university-of-hong-kong-msc-information-technology', country: 'Hong Kong', city: 'Hong Kong', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Information Technology', language: 'English', durationMonths: 24, tuitionFee: 17000.0, applicationFee: 95.0, currency: 'HKD', intakeSeason: 'September 2025', websiteUrl: 'https://cityu.edu.hk', description: 'IT program with practical focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-malaya', name: 'MSc Computer Science', slug: 'university-of-malaya-msc-computer-science', country: 'Malaysia', city: 'Kuala Lumpur', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 6500.0, applicationFee: 70.0, currency: 'MYR', intakeSeason: 'February 2025 / June 2025', websiteUrl: 'https://um.edu.my', description: 'Malaysia\'s top university CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'charles-university', name: 'MSc Informatics', slug: 'charles-university-msc-informatics', country: 'Czech Republic', city: 'Prague', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2500.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://cuni.cz', description: 'Central European CS program with affordable tuition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'masaryk-university', name: 'MSc Computer Science', slug: 'masaryk-university-msc-computer-science', country: 'Czech Republic', city: 'Brno', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 24, tuitionFee: 2500.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://muni.cz', description: 'AI-focused program in Czech Republic' },
+    { type: 'PROGRAM' as const, institutionSlug: 'czech-technical-university', name: 'MSc Informatics', slug: 'czech-technical-university-msc-informatics', country: 'Czech Republic', city: 'Prague', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2200.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://cvut.cz', description: 'Technical university with strong CS programs' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-warsaw', name: 'MSc Computer Science', slug: 'university-of-warsaw-msc-computer-science', country: 'Poland', city: 'Warsaw', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 4000.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://uw.edu.pl', description: 'Leading Polish CS program with systems focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'jagiellonian-university', name: 'MSc Computer Science', slug: 'jagiellonian-university-msc-computer-science', country: 'Poland', city: 'Krakow', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3500.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://uj.edu.pl', description: 'Historic Polish university with modern CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'warsaw-university-of-technology', name: 'MSc Computer Science', slug: 'warsaw-university-of-technology-msc-computer-science', country: 'Poland', city: 'Warsaw', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3000.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://pw.edu.pl', description: 'Technical university in Poland with practical CS focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'trinity-college-dublin', name: 'MSc Computer Science', slug: 'trinity-college-dublin-msc-computer-science', country: 'Ireland', city: 'Dublin', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 12, tuitionFee: 18000.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://tcd.ie', description: 'Historic Irish university with modern CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-college-dublin', name: 'MSc Computer Science', slug: 'university-college-dublin-msc-computer-science', country: 'Ireland', city: 'Dublin', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 12, tuitionFee: 17500.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ucd.ie', description: 'Comprehensive CS program in Dublin with industry links' },
+    { type: 'PROGRAM' as const, institutionSlug: 'nazarbayev-university', name: 'MSc Computer Science', slug: 'nazarbayev-university-msc-computer-science', country: 'Kazakhstan', city: 'Astana', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 6500.0, applicationFee: 80.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://nu.edu.kz', description: 'Leading Central Asian university with CS scholarships' },
+    { type: 'PROGRAM' as const, institutionSlug: 'al-farabi-kaznu', name: 'MSc Computer Science', slug: 'al-farabi-kaznu-msc-computer-science', country: 'Kazakhstan', city: 'Almaty', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 4500.0, applicationFee: 50.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://kaznu.kz', description: 'Kazakhstan\'s top university CS research program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-tartu', name: 'MSc Computer Science', slug: 'university-of-tartu-msc-computer-science', country: 'Estonia', city: 'Tartu', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2000.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ut.ee', description: 'Baltic CS program with research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tallinn-university-of-tech', name: 'MSc Informatics', slug: 'tallinn-university-of-tech-msc-informatics', country: 'Estonia', city: 'Tallinn', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1800.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://taltech.ee', description: 'Technical university in Estonia with modern CS programs' },
+    { type: 'PROGRAM' as const, institutionSlug: 'middle-east-technical-univ', name: 'MSc Artificial Intelligence', slug: 'middle-east-technical-univ-msc-artificial-intelligence', country: 'Turkey', city: 'Ankara', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 24, tuitionFee: 3000.0, applicationFee: 60.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://metu.edu.tr', description: 'Leading Turkish university with AI specialization' },
+    { type: 'PROGRAM' as const, institutionSlug: 'istanbul-technical-univ', name: 'MSc Computer Science', slug: 'istanbul-technical-univ-msc-computer-science', country: 'Turkey', city: 'Istanbul', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3500.0, applicationFee: 65.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://itu.edu.tr', description: 'Major Turkish technical university with CS programs' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-tech-univ-of-athens', name: 'MSc Computer Science', slug: 'national-tech-univ-of-athens-msc-computer-science', country: 'Greece', city: 'Athens', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1500.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ntua.gr', description: 'Greece\'s leading technical university CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-crete', name: 'MSc Computer Science', slug: 'university-of-crete-msc-computer-science', country: 'Greece', city: 'Heraklion', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1200.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uoc.gr', description: 'CS program in Greece with affordable fees' },
+    { type: 'PROGRAM' as const, institutionSlug: 'aristotle-univ-thessaloniki', name: 'MSc Computer Science', slug: 'aristotle-univ-thessaloniki-msc-computer-science', country: 'Greece', city: 'Thessaloniki', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1500.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://auth.gr', description: 'Northern Greece CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'erasmus-univ-rotterdam', name: 'MSc Data Science', slug: 'erasmus-univ-rotterdam-msc-data-science', country: 'Netherlands', city: 'Rotterdam', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Data Science', language: 'English', durationMonths: 12, tuitionFee: 2000.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://eur.nl', description: 'Data science and business analytics' },
+    { type: 'PROGRAM' as const, institutionSlug: 'maastricht-university', name: 'MSc Computer Science', slug: 'maastricht-university-msc-computer-science', country: 'Netherlands', city: 'Maastricht', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2200.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://maastrichtuniversity.nl', description: 'Problem-based learning CS at innovative Dutch university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ghent-university', name: 'MSc Computer Science', slug: 'ghent-university-msc-computer-science', country: 'Belgium', city: 'Ghent', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1800.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ugent.be', description: 'Belgian CS program with research and industry focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-wien', name: 'MSc Computer Science', slug: 'tu-wien-msc-computer-science', country: 'Austria', city: 'Vienna', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 1800.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://tuwien.at', description: 'Austrian technical university with CS focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-sydney', name: 'MSc Computer Science', slug: 'university-of-sydney-msc-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 40000.0, applicationFee: 100.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://sydney.edu.au', description: 'Top Australian CS program with research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'univ-of-new-south-wales', name: 'MSc Computer Science', slug: 'univ-of-new-south-wales-msc-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 38000.0, applicationFee: 95.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://unsw.edu.au', description: 'UNSW\'s leading CS program with industry connections' },
+    { type: 'PROGRAM' as const, institutionSlug: 'chulalongkorn-university', name: 'MSc Computer Science', slug: 'chulalongkorn-university-msc-computer-science', country: 'Thailand', city: 'Bangkok', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 7500.0, applicationFee: 75.0, currency: 'THB', intakeSeason: 'June 2025 / November 2025', websiteUrl: 'https://chula.ac.th', description: 'Thailand\'s top university CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-barcelona', name: 'MSc Artificial Intelligence', slug: 'university-of-barcelona-msc-artificial-intelligence', country: 'Spain', city: 'Barcelona', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 24, tuitionFee: 3500.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ub.edu', description: 'AI program at leading Spanish university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-lisbon', name: 'MSc Computer Science', slug: 'university-of-lisbon-msc-computer-science', country: 'Portugal', city: 'Lisbon', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2500.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ulisboa.pt', description: 'CS program in Portugal with emphasis on systems' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-porto', name: 'MSc Computer Science', slug: 'university-of-porto-msc-computer-science', country: 'Portugal', city: 'Porto', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 2500.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://up.pt', description: 'Northern Portuguese CS program with research focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'sapienza-university-of-rome', name: 'MSc Computer Science', slug: 'sapienza-university-of-rome-msc-computer-science', country: 'Italy', city: 'Rome', degreeLevel: 'MASTER' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 24, tuitionFee: 3600.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uniroma1.it', description: 'One of Italy\'s oldest universities with strong CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'massachusetts-institute-of-technology', name: 'BSc Computer Science', slug: 'massachusetts-institute-of-technology-bsc-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 58000.0, applicationFee: 100.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://mit.edu', description: 'World\'s top CS undergraduate program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'stanford-university', name: 'BSc Computer Science', slug: 'stanford-university-bsc-computer-science', country: 'United States', city: 'Stanford', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 57000.0, applicationFee: 90.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://stanford.edu', description: 'Top-ranked US undergraduate CS with interdisciplinary options' },
+    { type: 'PROGRAM' as const, institutionSlug: 'harvard-university', name: 'BSc Computer Science', slug: 'harvard-university-bsc-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 57261.0, applicationFee: 85.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://harvard.edu', description: 'Harvard undergraduate CS with Ivy League prestige' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-oxford', name: 'BSc Computer Science', slug: 'university-of-oxford-bsc-computer-science', country: 'United Kingdom', city: 'Oxford', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 12000.0, applicationFee: 75.0, currency: 'GBP', intakeSeason: 'October 2025', websiteUrl: 'https://ox.ac.uk', description: 'Rigorous 3-year BSc focusing on mathematical foundations' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-cambridge', name: 'BSc Computer Science', slug: 'university-of-cambridge-bsc-computer-science', country: 'United Kingdom', city: 'Cambridge', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 12000.0, applicationFee: 80.0, currency: 'GBP', intakeSeason: 'October 2025', websiteUrl: 'https://cam.ac.uk', description: 'Cambridge\'s prestigious 3-year CS tripos' },
+    { type: 'PROGRAM' as const, institutionSlug: 'eth-zurich', name: 'BSc Computer Science', slug: 'eth-zurich-bsc-computer-science', country: 'Switzerland', city: 'Zurich', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 730.0, applicationFee: 100.0, currency: 'CHF', intakeSeason: 'September 2025', websiteUrl: 'https://ethz.ch', description: 'Swiss BSc with low tuition and high academic standards' },
+    { type: 'PROGRAM' as const, institutionSlug: 'imperial-college-london', name: 'BSc Computer Science', slug: 'imperial-college-london-bsc-computer-science', country: 'United Kingdom', city: 'London', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 12500.0, applicationFee: 75.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://imperial.ac.uk', description: '4-year undergraduate CS with industrial placement option' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-college-london', name: 'BSc Computer Science', slug: 'university-college-london-bsc-computer-science', country: 'United Kingdom', city: 'London', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 12500.0, applicationFee: 70.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://ucl.ac.uk', description: 'Comprehensive BSc with programming and theory foundation' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-toronto', name: 'BSc Computer Science', slug: 'university-of-toronto-bsc-computer-science', country: 'Canada', city: 'Toronto', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 40000.0, applicationFee: 90.0, currency: 'CAD', intakeSeason: 'September 2025', websiteUrl: 'https://utoronto.ca', description: 'Leading Canadian CS undergraduate program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'mcgill-university', name: 'BSc Computer Science', slug: 'mcgill-university-bsc-computer-science', country: 'Canada', city: 'Montreal', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 38000.0, applicationFee: 85.0, currency: 'CAD', intakeSeason: 'September 2025', websiteUrl: 'https://mcgill.ca', description: 'Prestigious Canadian BSc in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-university-of-singapore', name: 'BSc Computer Science', slug: 'national-university-of-singapore-bsc-computer-science', country: 'Singapore', city: 'Singapore', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 15000.0, applicationFee: 80.0, currency: 'SGD', intakeSeason: 'August 2025', websiteUrl: 'https://nus.edu.sg', description: 'Asia\'s top undergraduate CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tsinghua-university', name: 'BSc Computer Science', slug: 'tsinghua-university-bsc-computer-science', country: 'China', city: 'Beijing', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Chinese', durationMonths: 48, tuitionFee: 4000.0, applicationFee: 60.0, currency: 'CNY', intakeSeason: 'September 2025', websiteUrl: 'https://tsinghua.edu.cn', description: 'China\'s top CS undergraduate program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kaist', name: 'BSc Computer Science', slug: 'kaist-bsc-computer-science', country: 'South Korea', city: 'Daejeon', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 4500.0, applicationFee: 75.0, currency: 'KRW', intakeSeason: 'March 2026 / September 2025', websiteUrl: 'https://kaist.ac.kr', description: 'Korea\'s top science and technology BSc' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kyoto-university', name: 'BSc Computer Science', slug: 'kyoto-university-bsc-computer-science', country: 'Japan', city: 'Kyoto', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Japanese', durationMonths: 48, tuitionFee: 3500.0, applicationFee: 75.0, currency: 'JPY', intakeSeason: 'April 2026', websiteUrl: 'https://kyoto-u.ac.jp', description: 'Japanese traditional university with CS fundamentals' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-hong-kong', name: 'BSc Computer Science', slug: 'university-of-hong-kong-bsc-computer-science', country: 'Hong Kong', city: 'Hong Kong', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 14500.0, applicationFee: 90.0, currency: 'HKD', intakeSeason: 'September 2025', websiteUrl: 'https://hku.hk', description: 'Top Asian undergraduate CS in Hong Kong' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-munich', name: 'BSc Computer Science', slug: 'tu-munich-tum-bsc-computer-science', country: 'Germany', city: 'Munich', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'German', durationMonths: 36, tuitionFee: 0.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://tum.de', description: 'Free BS degree in CS at Germany\'s best technical university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'rwth-aachen-university', name: 'BSc Computer Science', slug: 'rwth-aachen-university-bsc-computer-science', country: 'Germany', city: 'Aachen', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'German', durationMonths: 36, tuitionFee: 0.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://rwth-aachen.de', description: 'Free BSc in CS with strong engineering tradition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'humboldt-university-berlin', name: 'BSc Computer Science', slug: 'humboldt-university-berlin-bsc-computer-science', country: 'Germany', city: 'Berlin', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'German', durationMonths: 36, tuitionFee: 0.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://hu-berlin.de', description: 'Berlin\'s top undergraduate CS with humanities integration' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-warsaw', name: 'BSc Computer Science', slug: 'university-of-warsaw-bsc-computer-science', country: 'Poland', city: 'Warsaw', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Polish', durationMonths: 36, tuitionFee: 2000.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://uw.edu.pl', description: 'Poland\'s leading CS undergraduate program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'warsaw-university-of-technology', name: 'BSc Computer Science', slug: 'warsaw-university-of-technology-bsc-computer-science', country: 'Poland', city: 'Warsaw', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Polish', durationMonths: 42, tuitionFee: 2500.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://pw.edu.pl', description: 'Engineering-focused CS at Polish technical university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'jagiellonian-university', name: 'BSc Computer Science', slug: 'jagiellonian-university-bsc-computer-science', country: 'Poland', city: 'Krakow', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Polish', durationMonths: 36, tuitionFee: 2200.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://uj.edu.pl', description: 'Historic Polish university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'charles-university', name: 'BSc Informatics', slug: 'charles-university-bsc-informatics', country: 'Czech Republic', city: 'Prague', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Czech', durationMonths: 36, tuitionFee: 0.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://cuni.cz', description: 'Czech undergraduate CS with free tuition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'czech-technical-university', name: 'BSc Computer Science', slug: 'czech-technical-university-bsc-computer-science', country: 'Czech Republic', city: 'Prague', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Czech', durationMonths: 42, tuitionFee: 0.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://cvut.cz', description: 'Technical BS degree in Prague' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ku-leuven', name: 'BSc Computer Science', slug: 'ku-leuven-bsc-computer-science', country: 'Belgium', city: 'Leuven', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Dutch', durationMonths: 36, tuitionFee: 1000.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://kuleuven.be', description: 'Belgium\'s top undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ghent-university', name: 'BSc Computer Science', slug: 'ghent-university-bsc-computer-science', country: 'Belgium', city: 'Ghent', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Dutch', durationMonths: 36, tuitionFee: 950.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ugent.be', description: 'Belgian BSc with research tradition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-vienna', name: 'BSc Computer Science', slug: 'university-of-vienna-bsc-computer-science', country: 'Austria', city: 'Vienna', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'German', durationMonths: 36, tuitionFee: 1500.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://univie.ac.at', description: 'Austrian university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-wien', name: 'BSc Computer Science', slug: 'tu-wien-bsc-computer-science', country: 'Austria', city: 'Vienna', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'German', durationMonths: 42, tuitionFee: 1500.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'October 2025', websiteUrl: 'https://tuwien.at', description: 'Technical undergraduate CS in Vienna' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-amsterdam', name: 'BSc Computer Science', slug: 'university-of-amsterdam-bsc-computer-science', country: 'Netherlands', city: 'Amsterdam', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Dutch', durationMonths: 36, tuitionFee: 2000.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uva.nl', description: 'Dutch BS with CS fundamentals and AI exposure' },
+    { type: 'PROGRAM' as const, institutionSlug: 'erasmus-univ-rotterdam', name: 'BSc Computer Science', slug: 'erasmus-univ-rotterdam-bsc-computer-science', country: 'Netherlands', city: 'Rotterdam', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Dutch', durationMonths: 36, tuitionFee: 2200.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://eur.nl', description: 'Rotterdam\'s undergraduate CS with business focus' },
+    { type: 'PROGRAM' as const, institutionSlug: 'aalto-university', name: 'BSc Computer Science', slug: 'aalto-university-bsc-computer-science', country: 'Finland', city: 'Espoo', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 0.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'August 2025', websiteUrl: 'https://aalto.fi', description: 'Finnish undergraduate CS with no tuition fees' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-helsinki', name: 'BSc Computer Science', slug: 'university-of-helsinki-bsc-computer-science', country: 'Finland', city: 'Helsinki', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Finnish', durationMonths: 36, tuitionFee: 0.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'August 2025', websiteUrl: 'https://helsinki.fi', description: 'Leading Finnish university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'lund-university', name: 'BSc Computer Science', slug: 'lund-university-bsc-computer-science', country: 'Sweden', city: 'Lund', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Swedish', durationMonths: 36, tuitionFee: 0.0, applicationFee: 60.0, currency: 'SEK', intakeSeason: 'August 2025', websiteUrl: 'https://lunduniversity.lu.se', description: 'Free Swedish BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'stockholm-university', name: 'BSc Computer Science', slug: 'stockholm-university-bsc-computer-science', country: 'Sweden', city: 'Stockholm', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Swedish', durationMonths: 36, tuitionFee: 0.0, applicationFee: 60.0, currency: 'SEK', intakeSeason: 'August 2025', websiteUrl: 'https://su.se', description: 'Free Swedish undergraduate CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'politecnico-di-milano', name: 'BSc Computer Science', slug: 'politecnico-di-milano-bsc-computer-science', country: 'Italy', city: 'Milan', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Italian', durationMonths: 36, tuitionFee: 3000.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://polimi.it', description: 'Italy\'s top engineering university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'sapienza-university-of-rome', name: 'BSc Computer Science', slug: 'sapienza-university-of-rome-bsc-computer-science', country: 'Italy', city: 'Rome', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Italian', durationMonths: 36, tuitionFee: 2500.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uniroma1.it', description: 'Oldest Italian university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-bologna', name: 'BSc Computer Science', slug: 'university-of-bologna-bsc-computer-science', country: 'Italy', city: 'Bologna', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Italian', durationMonths: 36, tuitionFee: 2800.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unibo.it', description: 'Ancient Italian university with modern CS curriculum' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-padua', name: 'BSc Computer Science', slug: 'university-of-padua-bsc-computer-science', country: 'Italy', city: 'Padua', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Italian', durationMonths: 36, tuitionFee: 2600.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unipd.it', description: 'Italian university BS with strong math foundation' },
+    { type: 'PROGRAM' as const, institutionSlug: 'trinity-college-dublin', name: 'BSc Computer Science', slug: 'trinity-college-dublin-bsc-computer-science', country: 'Ireland', city: 'Dublin', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 12000.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://tcd.ie', description: 'Irish top university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-college-dublin', name: 'BSc Computer Science', slug: 'university-college-dublin-bsc-computer-science', country: 'Ireland', city: 'Dublin', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 11500.0, applicationFee: 65.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ucd.ie', description: '4-year BS in CS at top Irish university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-tartu', name: 'BSc Computer Science', slug: 'university-of-tartu-bsc-computer-science', country: 'Estonia', city: 'Tartu', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 1500.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ut.ee', description: 'Baltic BS in CS with affordable tuition' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tallinn-university-of-tech', name: 'BSc Computer Science', slug: 'tallinn-university-of-tech-bsc-computer-science', country: 'Estonia', city: 'Tallinn', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Estonian', durationMonths: 42, tuitionFee: 1500.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://taltech.ee', description: 'Estonian technical university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'middle-east-technical-univ', name: 'BSc Computer Science', slug: 'middle-east-technical-univ-bsc-computer-science', country: 'Turkey', city: 'Ankara', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 2500.0, applicationFee: 55.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://metu.edu.tr', description: 'Leading Turkish university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'istanbul-technical-univ', name: 'BSc Computer Science', slug: 'istanbul-technical-univ-bsc-computer-science', country: 'Turkey', city: 'Istanbul', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Turkish', durationMonths: 48, tuitionFee: 2800.0, applicationFee: 55.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://itu.edu.tr', description: 'Turkish technical university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-tech-univ-of-athens', name: 'BSc Computer Science', slug: 'national-tech-univ-of-athens-bsc-computer-science', country: 'Greece', city: 'Athens', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Greek', durationMonths: 48, tuitionFee: 0.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ntua.gr', description: 'Free Greek BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-sydney', name: 'BSc Computer Science', slug: 'university-of-sydney-bsc-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 34000.0, applicationFee: 90.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://sydney.edu.au', description: 'Australian undergraduate CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'univ-of-new-south-wales', name: 'BSc Computer Science', slug: 'univ-of-new-south-wales-bsc-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 33000.0, applicationFee: 85.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://unsw.edu.au', description: 'UNSW 4-year undergraduate CS program' },
+    { type: 'PROGRAM' as const, institutionSlug: 'nazarbayev-university', name: 'BSc Computer Science', slug: 'nazarbayev-university-bsc-computer-science', country: 'Kazakhstan', city: 'Astana', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 5500.0, applicationFee: 70.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://nu.edu.kz', description: 'Central Asian top university BS in CS with scholarships' },
+    { type: 'PROGRAM' as const, institutionSlug: 'al-farabi-kaznu', name: 'BSc Computer Science', slug: 'al-farabi-kaznu-bsc-computer-science', country: 'Kazakhstan', city: 'Almaty', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Kazakh/Russian', durationMonths: 48, tuitionFee: 2500.0, applicationFee: 40.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://kaznu.kz', description: 'Kazakhstan\'s national university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'enu', name: 'BSc Computer Science', slug: 'enu-bsc-computer-science', country: 'Kazakhstan', city: 'Astana', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Russian', durationMonths: 48, tuitionFee: 2200.0, applicationFee: 35.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://enu.kz', description: 'Kazakh national university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'chulalongkorn-university', name: 'BSc Computer Science', slug: 'chulalongkorn-university-bsc-computer-science', country: 'Thailand', city: 'Bangkok', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Thai/English', durationMonths: 48, tuitionFee: 6000.0, applicationFee: 65.0, currency: 'THB', intakeSeason: 'June 2025', websiteUrl: 'https://chula.ac.th', description: 'Thailand\'s top university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-malaya', name: 'BSc Computer Science', slug: 'university-of-malaya-bsc-computer-science', country: 'Malaysia', city: 'Kuala Lumpur', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 5500.0, applicationFee: 60.0, currency: 'MYR', intakeSeason: 'February 2025 / June 2025', websiteUrl: 'https://um.edu.my', description: 'Malaysia\'s top university BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'zhejiang-university', name: 'BSc Computer Science', slug: 'zhejiang-university-bsc-computer-science', country: 'China', city: 'Hangzhou', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Chinese', durationMonths: 48, tuitionFee: 3500.0, applicationFee: 60.0, currency: 'CNY', intakeSeason: 'September 2025', websiteUrl: 'https://zju.edu.cn', description: 'Chinese top university undergraduate CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-barcelona', name: 'BSc Computer Science', slug: 'university-of-barcelona-bsc-computer-science', country: 'Spain', city: 'Barcelona', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Catalan/Spanish', durationMonths: 48, tuitionFee: 2200.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ub.edu', description: 'Spanish university 4-year BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-lisbon', name: 'BSc Computer Science', slug: 'university-of-lisbon-bsc-computer-science', country: 'Portugal', city: 'Lisbon', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'Portuguese', durationMonths: 36, tuitionFee: 1500.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://ulisboa.pt', description: 'Portuguese BS in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-hong-kong', name: 'BSc Computer Science', slug: 'university-of-hong-kong-bsc-computer-science-1', country: 'Hong Kong', city: 'Hong Kong', degreeLevel: 'BACHELOR' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 14000.0, applicationFee: 85.0, currency: 'HKD', intakeSeason: 'September 2025', websiteUrl: 'https://hku.hk', description: 'Hong Kong\'s top university BSc in CS' },
+    { type: 'PROGRAM' as const, institutionSlug: 'massachusetts-institute-of-technology', name: 'PhD Computer Science', slug: 'massachusetts-institute-of-technology-phd-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 60, tuitionFee: 0.0, applicationFee: 150.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://mit.edu', description: 'Fully funded PhD with stipend at world\'s top CS school' },
+    { type: 'PROGRAM' as const, institutionSlug: 'stanford-university', name: 'PhD Computer Science', slug: 'stanford-university-phd-computer-science', country: 'United States', city: 'Stanford', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 60, tuitionFee: 0.0, applicationFee: 125.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://stanford.edu', description: 'Fully funded PhD in top-ranked CS department' },
+    { type: 'PROGRAM' as const, institutionSlug: 'harvard-university', name: 'PhD Computer Science', slug: 'harvard-university-phd-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 60, tuitionFee: 0.0, applicationFee: 160.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://harvard.edu', description: 'Funded PhD with research across all CS subfields' },
+    { type: 'PROGRAM' as const, institutionSlug: 'eth-zurich', name: 'PhD Computer Science', slug: 'eth-zurich-phd-computer-science', country: 'Switzerland', city: 'Zurich', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 100.0, currency: 'CHF', intakeSeason: 'Rolling / September 2025', websiteUrl: 'https://ethz.ch', description: 'Paid PhD position at world-leading Swiss institute' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-oxford', name: 'PhD Artificial Intelligence', slug: 'university-of-oxford-phd-artificial-intelligence', country: 'United Kingdom', city: 'Oxford', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 75.0, currency: 'GBP', intakeSeason: 'January 2026 / September 2025', websiteUrl: 'https://ox.ac.uk', description: 'Funded AI PhD in world-renowned research environment' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-cambridge', name: 'PhD Computer Science', slug: 'university-of-cambridge-phd-computer-science', country: 'United Kingdom', city: 'Cambridge', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 36, tuitionFee: 0.0, applicationFee: 90.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://cam.ac.uk', description: '3-year funded PhD at prestigious Cambridge' },
+    { type: 'PROGRAM' as const, institutionSlug: 'imperial-college-london', name: 'PhD Computer Science', slug: 'imperial-college-london-phd-computer-science', country: 'United Kingdom', city: 'London', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 85.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://imperial.ac.uk', description: 'Funded PhD in top UK research environment' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-college-london', name: 'PhD Computer Science', slug: 'university-college-london-phd-computer-science', country: 'United Kingdom', city: 'London', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 80.0, currency: 'GBP', intakeSeason: 'September 2025', websiteUrl: 'https://ucl.ac.uk', description: 'Funded PhD with access to London tech industry' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ku-leuven', name: 'PhD Computer Science', slug: 'ku-leuven-phd-computer-science', country: 'Belgium', city: 'Leuven', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025 / Rolling', websiteUrl: 'https://kuleuven.be', description: 'Funded PhD with competitive salary at Belgian top university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-munich', name: 'PhD Machine Learning', slug: 'tu-munich-tum-phd-machine-learning', country: 'Germany', city: 'Munich', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Machine Learning', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'Winter 2025 / Summer 2026', websiteUrl: 'https://tum.de', description: 'Funded ML PhD at Germany\'s top technical university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'rwth-aachen-university', name: 'PhD Computer Science', slug: 'rwth-aachen-university-phd-computer-science', country: 'Germany', city: 'Aachen', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'Winter 2025 / Rolling', websiteUrl: 'https://rwth-aachen.de', description: 'Fully funded PhD with European tech connections' },
+    { type: 'PROGRAM' as const, institutionSlug: 'aalto-university', name: 'PhD Informatics', slug: 'aalto-university-phd-informatics', country: 'Finland', city: 'Espoo', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'August 2025 / Rolling', websiteUrl: 'https://aalto.fi', description: 'Funded PhD in Finland with competitive salary' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-toronto', name: 'PhD Computer Science', slug: 'university-of-toronto-phd-computer-science', country: 'Canada', city: 'Toronto', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 100.0, currency: 'CAD', intakeSeason: 'September 2025', websiteUrl: 'https://utoronto.ca', description: 'Fully funded Canadian PhD with research excellence' },
+    { type: 'PROGRAM' as const, institutionSlug: 'mcgill-university', name: 'PhD Computer Science', slug: 'mcgill-university-phd-computer-science', country: 'Canada', city: 'Montreal', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 95.0, currency: 'CAD', intakeSeason: 'September 2025', websiteUrl: 'https://mcgill.ca', description: 'Funded PhD in Montreal\'s vibrant tech community' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-university-of-singapore', name: 'PhD Computer Science', slug: 'national-university-of-singapore-phd-computer-science', country: 'Singapore', city: 'Singapore', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 85.0, currency: 'SGD', intakeSeason: 'August 2025 / January 2026', websiteUrl: 'https://nus.edu.sg', description: 'Funded PhD at Asia\'s top university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tsinghua-university', name: 'PhD Artificial Intelligence', slug: 'tsinghua-university-phd-artificial-intelligence', country: 'China', city: 'Beijing', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Artificial Intelligence', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 65.0, currency: 'CNY', intakeSeason: 'September 2025', websiteUrl: 'https://tsinghua.edu.cn', description: 'Government-funded AI PhD at China\'s top university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kaist', name: 'PhD Computer Science', slug: 'kaist-phd-computer-science', country: 'South Korea', city: 'Daejeon', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 60, tuitionFee: 0.0, applicationFee: 80.0, currency: 'KRW', intakeSeason: 'March 2026 / September 2025', websiteUrl: 'https://kaist.ac.kr', description: 'Fully funded PhD at Korea\'s top science institute' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-amsterdam', name: 'PhD Computer Science', slug: 'university-of-amsterdam-phd-computer-science', country: 'Netherlands', city: 'Amsterdam', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'Rolling', websiteUrl: 'https://uva.nl', description: 'Funded PhD position as university researcher' },
+    { type: 'PROGRAM' as const, institutionSlug: 'nazarbayev-university', name: 'PhD Computer Science', slug: 'nazarbayev-university-phd-computer-science', country: 'Kazakhstan', city: 'Astana', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 80.0, currency: 'USD', intakeSeason: 'September 2025', websiteUrl: 'https://nu.edu.kz', description: 'Funded PhD in Central Asia with international faculty' },
+    { type: 'PROGRAM' as const, institutionSlug: 'trinity-college-dublin', name: 'PhD Cybersecurity', slug: 'trinity-college-dublin-phd-cybersecurity', country: 'Ireland', city: 'Dublin', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Cybersecurity', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 75.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://tcd.ie', description: 'Funded Irish PhD in cybersecurity research' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-sydney', name: 'PhD Computer Science', slug: 'university-of-sydney-phd-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 100.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://sydney.edu.au', description: 'Australian funded PhD with stipend' },
+    { type: 'PROGRAM' as const, institutionSlug: 'univ-of-new-south-wales', name: 'PhD Computer Science', slug: 'univ-of-new-south-wales-phd-computer-science', country: 'Australia', city: 'Sydney', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 95.0, currency: 'AUD', intakeSeason: 'February 2025 / July 2025', websiteUrl: 'https://unsw.edu.au', description: 'Funded UNSW PhD in computing research' },
+    { type: 'PROGRAM' as const, institutionSlug: 'politecnico-di-milano', name: 'PhD Data Science', slug: 'politecnico-di-milano-phd-data-science', country: 'Italy', city: 'Milan', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Data Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 70.0, currency: 'EUR', intakeSeason: 'September 2025 / November 2025', websiteUrl: 'https://polimi.it', description: 'Italian funded PhD in data science' },
+    { type: 'PROGRAM' as const, institutionSlug: 'charles-university', name: 'PhD Computer Science', slug: 'charles-university-phd-computer-science', country: 'Czech Republic', city: 'Prague', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 55.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://cuni.cz', description: 'Central European PhD with funding opportunities' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-helsinki', name: 'PhD Computer Science', slug: 'university-of-helsinki-phd-computer-science', country: 'Finland', city: 'Helsinki', degreeLevel: 'DOCTORATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 48, tuitionFee: 0.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'August 2025', websiteUrl: 'https://helsinki.fi', description: 'Funded Finnish PhD with competitive salary' },
+    { type: 'PROGRAM' as const, institutionSlug: 'eth-zurich', name: 'Exchange Semester - Computer Science', slug: 'eth-zurich-exchange-semester-computer-science', country: 'Switzerland', city: 'Zurich', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 500.0, applicationFee: 50.0, currency: 'CHF', intakeSeason: 'Autumn 2025 / Spring 2026', websiteUrl: 'https://ethz.ch', description: 'Semester exchange at world-top Swiss university for CS students' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tu-munich', name: 'Exchange Program - Engineering', slug: 'tu-munich-tum-exchange-program-engineering', country: 'Germany', city: 'Munich', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Engineering', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 40.0, currency: 'EUR', intakeSeason: 'Winter 2025 / Summer 2026', websiteUrl: 'https://tum.de', description: 'Semester exchange at Germany\'s top technical university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'massachusetts-institute-of-technology', name: 'Visiting Student - Computer Science', slug: 'massachusetts-institute-of-technology-visiting-student-computer-science', country: 'United States', city: 'Cambridge', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 22000.0, applicationFee: 100.0, currency: 'USD', intakeSeason: 'September 2025 / February 2026', websiteUrl: 'https://mit.edu', description: 'Visiting student program with access to MIT labs' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-amsterdam', name: 'Exchange Semester - CS and AI', slug: 'university-of-amsterdam-exchange-semester-cs-and-ai', country: 'Netherlands', city: 'Amsterdam', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 1500.0, applicationFee: 50.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://uva.nl', description: 'AI and CS semester exchange in Amsterdam' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-bologna', name: 'Erasmus+ Exchange', slug: 'university-of-bologna-erasmus-exchange', country: 'Italy', city: 'Bologna', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 0.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://unibo.it', description: 'EU-funded Erasmus exchange semester for EU students' },
+    { type: 'PROGRAM' as const, institutionSlug: 'ku-leuven', name: 'Erasmus+ Exchange', slug: 'ku-leuven-erasmus-exchange', country: 'Belgium', city: 'Leuven', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 0.0, currency: 'EUR', intakeSeason: 'September 2025 / February 2026', websiteUrl: 'https://kuleuven.be', description: 'Erasmus exchange at top Belgian university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'aalto-university', name: 'Erasmus+ Exchange', slug: 'aalto-university-erasmus-exchange', country: 'Finland', city: 'Espoo', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 0.0, currency: 'EUR', intakeSeason: 'August 2025 / January 2026', websiteUrl: 'https://aalto.fi', description: 'Funded Erasmus exchange in Finland' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-warsaw', name: 'Erasmus+ Exchange', slug: 'university-of-warsaw-erasmus-exchange', country: 'Poland', city: 'Warsaw', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 0.0, currency: 'EUR', intakeSeason: 'October 2025 / March 2026', websiteUrl: 'https://uw.edu.pl', description: 'Erasmus exchange at leading Polish university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'kaist', name: 'Exchange Semester - STEM', slug: 'kaist-exchange-semester-stem', country: 'South Korea', city: 'Daejeon', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Engineering', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 70.0, currency: 'KRW', intakeSeason: 'March 2026 / September 2025', websiteUrl: 'https://kaist.ac.kr', description: 'Korean exchange program for STEM students' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-hong-kong', name: 'Exchange Semester - Computer Science', slug: 'university-of-hong-kong-exchange-semester-computer-science', country: 'Hong Kong', city: 'Hong Kong', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 7000.0, applicationFee: 80.0, currency: 'HKD', intakeSeason: 'September 2025', websiteUrl: 'https://hku.hk', description: 'Semester exchange at Hong Kong\'s top university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'politecnico-di-milano', name: 'Exchange Semester - Engineering', slug: 'politecnico-di-milano-exchange-semester-engineering', country: 'Italy', city: 'Milan', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Engineering', language: 'English', durationMonths: 6, tuitionFee: 1500.0, applicationFee: 60.0, currency: 'EUR', intakeSeason: 'September 2025', websiteUrl: 'https://polimi.it', description: 'Exchange semester at Italy\'s top engineering university' },
+    { type: 'PROGRAM' as const, institutionSlug: 'university-of-oxford', name: 'Visiting Student Program', slug: 'university-of-oxford-visiting-student-program', country: 'United Kingdom', city: 'Oxford', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 13500.0, applicationFee: 75.0, currency: 'GBP', intakeSeason: 'Michaelmas 2025 / Hilary 2026', websiteUrl: 'https://ox.ac.uk', description: 'Visiting student at Oxford with access to labs and tutorials' },
+    { type: 'PROGRAM' as const, institutionSlug: 'charles-university', name: 'Erasmus+ Exchange', slug: 'charles-university-erasmus-exchange', country: 'Czech Republic', city: 'Prague', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 0.0, applicationFee: 0.0, currency: 'EUR', intakeSeason: 'September 2025 / February 2026', websiteUrl: 'https://cuni.cz', description: 'Erasmus exchange in beautiful Prague' },
+    { type: 'PROGRAM' as const, institutionSlug: 'tallinn-university-of-tech', name: 'Exchange Semester - IT', slug: 'tallinn-university-of-tech-exchange-semester-it', country: 'Estonia', city: 'Tallinn', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 1000.0, applicationFee: 45.0, currency: 'EUR', intakeSeason: 'September 2025 / January 2026', websiteUrl: 'https://taltech.ee', description: 'IT exchange semester in Estonia\'s digital capital' },
+    { type: 'PROGRAM' as const, institutionSlug: 'national-university-of-singapore', name: 'Non-degree Exchange', slug: 'national-university-of-singapore-non-degree-exchange', country: 'Singapore', city: 'Singapore', degreeLevel: 'CERTIFICATE' as const, fieldOfStudy: 'Computer Science', language: 'English', durationMonths: 6, tuitionFee: 6000.0, applicationFee: 75.0, currency: 'SGD', intakeSeason: 'August 2025 / January 2026', websiteUrl: 'https://nus.edu.sg', description: 'Non-degree exchange at Asia\'s top university' },
   ];
 
+  let programCount = 0;
   const createdPrograms = [];
-  for (const program of programs) {
-    const created = await prisma.opportunity.create({ data: program });
+  for (const p of programsData) {
+    const { institutionSlug, ...data } = p;
+    const institutionId = institutionMap[institutionSlug];
+    if (!institutionId) {
+      console.warn(`Institution not found for slug: ${institutionSlug}`);
+      continue;
+    }
+    const created = await prisma.opportunity.create({ data: { ...data, institutionId } });
     createdPrograms.push(created);
+    programCount++;
   }
 
-  console.log('✅ Created programs');
+  console.log(`✅ Created ${programCount} programs`);
 
-  // Create scholarships
+  // ============================================================
+  // SCHOLARSHIPS
+  // ============================================================
   console.log('Creating scholarships...');
-
   const scholarships = [
-    {
-      type: 'SCHOLARSHIP',
-      institutionId: createdInstitutions[0].id, // Use Harvard as placeholder
-      name: 'Fulbright Foreign Student Program',
-      slug: 'fulbright-scholarship',
-      country: 'USA',
-      degreeLevel: 'MASTER',
-      scholarshipAmount: 50000,
-      currency: 'USD',
-      description: 'Fully funded scholarship for international students to study in the USA',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'SCHOLARSHIP',
-      institutionId: createdInstitutions[3].id, // Oxford
-      name: 'Chevening Scholarships',
-      slug: 'chevening-scholarship',
-      country: 'UK',
-      degreeLevel: 'MASTER',
-      scholarshipAmount: 35000,
-      currency: 'GBP',
-      description: 'UK government scholarship for future leaders',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'SCHOLARSHIP',
-      institutionId: createdInstitutions[8].id, // TUM
-      name: 'DAAD Scholarship',
-      slug: 'daad-scholarship',
-      country: 'Germany',
-      degreeLevel: 'MASTER',
-      scholarshipAmount: 20000,
-      currency: 'EUR',
-      description: 'German Academic Exchange Service scholarships',
-      intakeSeason: 'Fall 2026',
-    },
-    {
-      type: 'SCHOLARSHIP',
-      institutionId: createdInstitutions[7].id, // Melbourne
-      name: 'Australia Awards',
-      slug: 'australia-awards',
-      country: 'Australia',
-      degreeLevel: 'MASTER',
-      scholarshipAmount: 40000,
-      currency: 'AUD',
-      description: 'Fully funded scholarships to study in Australia',
-      intakeSeason: 'Fall 2026',
-    },
+    { type: 'SCHOLARSHIP' as const, institutionSlug: 'harvard-university', name: 'Fulbright Foreign Student Program', slug: 'fulbright-scholarship', country: 'USA', degreeLevel: 'MASTER' as const, scholarshipAmount: 50000, currency: 'USD', description: 'Fully funded scholarship for international students to study in the USA', intakeSeason: 'Fall 2026' },
+    { type: 'SCHOLARSHIP' as const, institutionSlug: 'university-of-oxford', name: 'Chevening Scholarships', slug: 'chevening-scholarship', country: 'UK', degreeLevel: 'MASTER' as const, scholarshipAmount: 35000, currency: 'GBP', description: 'UK government scholarship for future leaders', intakeSeason: 'Fall 2026' },
+    { type: 'SCHOLARSHIP' as const, institutionSlug: 'tu-munich', name: 'DAAD Scholarship', slug: 'daad-scholarship', country: 'Germany', degreeLevel: 'MASTER' as const, scholarshipAmount: 20000, currency: 'EUR', description: 'German Academic Exchange Service scholarships', intakeSeason: 'Fall 2026' },
   ];
 
-  for (const scholarship of scholarships) {
-    await prisma.opportunity.create({ data: scholarship });
+  for (const s of scholarships) {
+    const { institutionSlug, ...data } = s;
+    const institutionId = institutionMap[institutionSlug];
+    if (institutionId) {
+      await prisma.opportunity.create({ data: { ...data, institutionId } });
+    }
   }
 
   console.log('✅ Created scholarships');
 
-  // Create sample applications for demo student
-  console.log('Creating sample applications...');
-
-  const applicationStatuses = [
-    { opportunityId: createdPrograms[0].id, status: 'IN_REVIEW' },
-    { opportunityId: createdPrograms[1].id, status: 'DOCUMENTS_PENDING' },
-    { opportunityId: createdPrograms[7].id, status: 'SUBMITTED' },
-  ] as const;
-
-  for (const [index, appData] of applicationStatuses.entries()) {
-    await prisma.application.create({
-      data: {
-        studentId: demoStudent.id,
-        opportunityId: appData.opportunityId,
-        applicationNumber: `APP-2026-${String(index + 1).padStart(5, '0')}`,
-        status: appData.status,
-        counselorId: demoCounselor.id,
-        submittedAt: appData.status === 'SUBMITTED' ? new Date() : null,
-      },
-    });
+  // Sample applications
+  if (createdPrograms.length >= 3) {
+    for (const [index, prog] of createdPrograms.slice(0, 3).entries()) {
+      const statuses = ['IN_REVIEW', 'DOCUMENTS_PENDING', 'SUBMITTED'] as const;
+      await prisma.application.create({
+        data: {
+          studentId: demoStudent.id,
+          opportunityId: prog.id,
+          applicationNumber: `APP-2026-${String(index + 1).padStart(5, '0')}`,
+          status: statuses[index],
+          counselorId: demoCounselor.id,
+          submittedAt: statuses[index] === 'SUBMITTED' ? new Date() : null,
+        },
+      });
+    }
+    console.log('✅ Created sample applications');
   }
 
-  console.log('✅ Created applications');
-
-  // Create sample documents
-  console.log('Creating sample documents...');
-
-  const documents = [
-    {
-      studentId: demoStudent.id,
-      documentType: 'PASSPORT',
-      title: 'Passport',
-      reviewStatus: 'APPROVED',
-      expiryDate: new Date('2030-05-15'),
-    },
-    {
-      studentId: demoStudent.id,
-      documentType: 'TRANSCRIPT',
-      title: 'Academic Transcript',
-      reviewStatus: 'APPROVED',
-    },
-    {
-      studentId: demoStudent.id,
-      documentType: 'RECOMMENDATION_LETTER',
-      title: 'Letter of Recommendation',
-      reviewStatus: 'PENDING_REVIEW',
-    },
+  // Sample documents
+  const docs = [
+    { studentId: demoStudent.id, documentType: 'PASSPORT', title: 'Passport', reviewStatus: 'APPROVED', expiryDate: new Date('2030-05-15') },
+    { studentId: demoStudent.id, documentType: 'TRANSCRIPT', title: 'Academic Transcript', reviewStatus: 'APPROVED' },
+    { studentId: demoStudent.id, documentType: 'RECOMMENDATION_LETTER', title: 'Letter of Recommendation', reviewStatus: 'PENDING_REVIEW' },
   ];
-
-  for (const doc of documents) {
+  for (const doc of docs) {
     await prisma.document.create({ data: doc });
   }
-
-  console.log('✅ Created documents');
+  console.log('✅ Created sample documents');
 
   console.log('');
   console.log('✅ Seeding complete!');
-  console.log('');
-  console.log('📧 Demo accounts created:');
-  console.log('   Student: student@demo.com / Demo123!');
-  console.log('   Counselor: counselor@demo.com / Demo123!');
-  console.log('');
-  console.log('📊 Data created:');
-  console.log(`   ${createdInstitutions.length} institutions`);
-  console.log(`   ${createdPrograms.length} university programs`);
-  console.log(`   ${scholarships.length} scholarships`);
-  console.log(`   ${applicationStatuses.length} sample applications`);
-  console.log(`   ${documents.length} sample documents`);
-  console.log('');
+  console.log('📧 student@demo.com / Demo123!');
+  console.log('📧 counselor@demo.com / Demo123!');
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
+
