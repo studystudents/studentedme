@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/dashboard-layout';
 import {
   CheckCircle2,
@@ -40,6 +40,14 @@ interface AnalysisResult {
   actionItems: string[];
   profileSummary: string;
   competitiveAnalysis: string;
+}
+
+interface HistoryEntry {
+  date: string;
+  fieldOfStudy: string;
+  programType: string;
+  overallScore: number;
+  result: AnalysisResult;
 }
 
 const defaultForm = {
@@ -144,9 +152,35 @@ export default function AnalyzerPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
-  const set = (key: string, value: string | boolean) =>
-    setForm((f) => ({ ...f, [key]: value }));
+  // Load saved form and history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('analyzerForm');
+    if (saved) {
+      try {
+        setForm(JSON.parse(saved));
+      } catch {
+        // ignore parse errors
+      }
+    }
+    const savedHistory = localStorage.getItem('analyzerHistory');
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch {
+        // ignore parse errors
+      }
+    }
+  }, []);
+
+  const set = (key: string, value: string | boolean) => {
+    setForm((f) => {
+      const updated = { ...f, [key]: value };
+      localStorage.setItem('analyzerForm', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,6 +249,21 @@ export default function AnalyzerPage() {
 
       const data: AnalysisResult = await res.json();
       setResult(data);
+
+      // Save to history
+      const entry: HistoryEntry = {
+        date: new Date().toISOString(),
+        fieldOfStudy: form.fieldOfStudy,
+        programType: form.programType,
+        overallScore: data.overallScore,
+        result: data,
+      };
+      setHistory((prev) => {
+        const updated = [entry, ...prev].slice(0, 10);
+        localStorage.setItem('analyzerHistory', JSON.stringify(updated));
+        return updated;
+      });
+
       setTimeout(() => {
         document.getElementById('analysis-results')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -283,6 +332,7 @@ export default function AnalyzerPage() {
                   <div>
                     <label className={labelCls}>Program Type</label>
                     <select value={form.programType} onChange={(e) => set('programType', e.target.value)} className={selectCls}>
+                      <option value="HIGH_SCHOOL">High School Graduate</option>
                       <option value="BACHELOR">Bachelor</option>
                       <option value="MASTER">Master</option>
                       <option value="PHD">PhD</option>
@@ -777,6 +827,47 @@ export default function AnalyzerPage() {
             <div className="border border-foreground/10 p-6">
               <h3 className="text-xs uppercase tracking-widest text-foreground/40 mb-3">Competitive Analysis</h3>
               <p className="text-sm text-foreground/80 leading-relaxed">{result.competitiveAnalysis}</p>
+            </div>
+          </div>
+        )}
+
+        {/* History */}
+        {history.length > 0 && (
+          <div className="space-y-4 pt-6 border-t border-foreground/10">
+            <h2 className="text-lg font-serif font-medium tracking-tight">Analysis History</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {history.map((entry, i) => {
+                const scoreColor =
+                  entry.overallScore >= 70
+                    ? 'text-emerald-500'
+                    : entry.overallScore >= 45
+                    ? 'text-amber-500'
+                    : 'text-rose-500';
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setResult(entry.result);
+                      setTimeout(() => {
+                        document.getElementById('analysis-results')?.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}
+                    className="border border-foreground/10 p-4 text-left space-y-2 hover:border-foreground/30 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className={`text-2xl font-serif font-bold ${scoreColor}`}>
+                        {entry.overallScore}
+                      </span>
+                      <span className="text-xs text-foreground/40">
+                        {new Date(entry.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-foreground truncate">{entry.fieldOfStudy}</p>
+                    <p className="text-xs text-foreground/50 uppercase tracking-wide">{entry.programType}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

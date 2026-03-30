@@ -58,7 +58,8 @@
       "Bash(npm list:*)",
       "Bash(node create_report.js)",
       "Bash(mkdir -p /tmp/docx_report)",
-      "Bash(npm init:*)"
+      "Bash(npm init:*)",
+      "Bash(head -20 grep -rn \"Bachelor\\\\|HIGH_SCHOOL\\\\|High School\\\\|degreeLevel\\\\|programType\" /Users/insarek/Documents/studented_me-main/frontend/src/app/dashboard/sop-generator/page.tsx)"
     ]
   }
 }

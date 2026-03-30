@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/dashboard-layout';
 import {
   FileText,
@@ -9,6 +9,8 @@ import {
   Download,
   RefreshCw,
   CheckCheck,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
@@ -19,11 +21,19 @@ interface SopResult {
   language: string;
 }
 
+interface SopHistoryEntry {
+  date: string;
+  targetUniversity: string;
+  fieldOfStudy: string;
+  programType: string;
+  letter: string;
+}
+
 const defaultForm = {
   // Target program
   targetUniversity: '',
   targetCountry: '',
-  programType: 'MASTER' as 'BACHELOR' | 'MASTER' | 'PHD',
+  programType: 'MASTER' as 'HIGH_SCHOOL' | 'BACHELOR' | 'MASTER' | 'PHD',
   fieldOfStudy: '',
 
   // Profile
@@ -62,9 +72,37 @@ export default function SopGeneratorPage() {
   const [result, setResult] = useState<SopResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState<SopHistoryEntry[]>([]);
+  const [expandedHistory, setExpandedHistory] = useState<number | null>(null);
+  const [copiedHistory, setCopiedHistory] = useState<number | null>(null);
 
-  const set = (key: string, value: string | boolean | number) =>
-    setForm((f) => ({ ...f, [key]: value }));
+  // Load saved form and history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('sopForm');
+    if (saved) {
+      try {
+        setForm(JSON.parse(saved));
+      } catch {
+        // ignore parse errors
+      }
+    }
+    const savedHistory = localStorage.getItem('sopHistory');
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch {
+        // ignore parse errors
+      }
+    }
+  }, []);
+
+  const set = (key: string, value: string | boolean | number) => {
+    setForm((f) => {
+      const updated = { ...f, [key]: value };
+      localStorage.setItem('sopForm', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,6 +156,20 @@ export default function SopGeneratorPage() {
 
       const data: SopResult = await res.json();
       setResult(data);
+
+      // Save to history
+      const entry: SopHistoryEntry = {
+        date: new Date().toISOString(),
+        targetUniversity: form.targetUniversity,
+        fieldOfStudy: form.fieldOfStudy,
+        programType: form.programType,
+        letter: data.letter,
+      };
+      setHistory((prev) => {
+        const updated = [entry, ...prev].slice(0, 10);
+        localStorage.setItem('sopHistory', JSON.stringify(updated));
+        return updated;
+      });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
@@ -141,6 +193,12 @@ export default function SopGeneratorPage() {
     a.download = `SOP_${form.targetUniversity.replace(/\s+/g, '_') || 'letter'}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleCopyHistory = async (letter: string, index: number) => {
+    await navigator.clipboard.writeText(letter);
+    setCopiedHistory(index);
+    setTimeout(() => setCopiedHistory(null), 2000);
   };
 
   const inputCls =
@@ -213,6 +271,7 @@ export default function SopGeneratorPage() {
                       onChange={(e) => set('programType', e.target.value)}
                       className={selectCls}
                     >
+                      <option value="HIGH_SCHOOL">High School Graduate</option>
                       <option value="BACHELOR">Bachelor</option>
                       <option value="MASTER">Master</option>
                       <option value="PHD">PhD</option>
@@ -636,6 +695,65 @@ export default function SopGeneratorPage() {
             </div>
           </div>
         </form>
+
+        {/* History */}
+        {history.length > 0 && (
+          <div className="space-y-4 pt-6 border-t border-foreground/10">
+            <h2 className="text-lg font-serif font-medium tracking-tight">Generated SOPs History</h2>
+            <div className="space-y-3">
+              {history.map((entry, i) => (
+                <div key={i} className="border border-foreground/10">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedHistory(expandedHistory === i ? null : i)}
+                    className="w-full flex items-center justify-between p-4 text-left hover:bg-foreground/2 transition-colors"
+                  >
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-medium text-foreground">{entry.targetUniversity}</p>
+                      <p className="text-xs text-foreground/50">
+                        {entry.fieldOfStudy} &middot; <span className="uppercase">{entry.programType}</span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0 ml-4">
+                      <span className="text-xs text-foreground/40">
+                        {new Date(entry.date).toLocaleDateString()}
+                      </span>
+                      {expandedHistory === i ? (
+                        <ChevronUp className="h-4 w-4 text-foreground/40" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 text-foreground/40" />
+                      )}
+                    </div>
+                  </button>
+                  {expandedHistory === i && (
+                    <div className="border-t border-foreground/10 p-4 space-y-3">
+                      <pre className="text-xs text-foreground/70 whitespace-pre-wrap font-mono leading-relaxed max-h-64 overflow-y-auto">
+                        {entry.letter}
+                      </pre>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyHistory(entry.letter, i)}
+                        className="flex items-center gap-2 px-3 h-8 border border-foreground/15 text-xs uppercase tracking-wide text-foreground/60 hover:border-foreground/40 hover:text-foreground transition-colors"
+                      >
+                        {copiedHistory === i ? (
+                          <>
+                            <CheckCheck className="h-3.5 w-3.5 text-emerald-500" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3.5 w-3.5" />
+                            Copy Letter
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
