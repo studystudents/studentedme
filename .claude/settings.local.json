@@ -50,7 +50,15 @@
       "Bash(sed -i '' \"s/llama-3.3-70b-versatile/gemma2-9b-it/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)",
       "Bash(sed -i '' \"s/gemma2-9b-it/llama-3.1-8b-instant/g\" /Users/insarek/Documents/studented_me-main/src/modules/sop-generator/sop-generator.service.ts)",
       "Bash(sed -i '' \"s/gemma2-9b-it/llama-3.1-8b-instant/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)",
-      "Bash(head -20 grep -n \"navItems\\\\|deadline\\\\|Deadline\" /Users/insarek/Documents/studented_me-main/frontend/src/components/dashboard-layout.tsx)"
+      "Bash(head -20 grep -n \"navItems\\\\|deadline\\\\|Deadline\" /Users/insarek/Documents/studented_me-main/frontend/src/components/dashboard-layout.tsx)",
+      "Bash(python3 \"/Users/insarek/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/657b9755-d21f-4860-9f7e-ec080d30c021/20cbcdab-6289-4f0f-a7c6-7a9e5eec08c7/skills/docx/scripts/office/unpack.py\" \"/Users/insarek/Downloads/Правила и Положение \"\"Astana STEAM Forum\"\" 2026.docx\" /tmp/steam_forum_unpacked/)",
+      "Bash(cp \"/Users/insarek/Downloads/Правила и Положение \"\"Astana STEAM Forum\"\" 2026.docx\" /tmp/steam_rules.docx)",
+      "Bash(python3 \"/Users/insarek/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/657b9755-d21f-4860-9f7e-ec080d30c021/20cbcdab-6289-4f0f-a7c6-7a9e5eec08c7/skills/docx/scripts/office/unpack.py\" /tmp/steam_rules.docx /tmp/steam_unpacked/)",
+      "Bash(find /Users/insarek/Downloads -name *STEAM* -o -name *steam*Forum*)",
+      "Bash(npm list:*)",
+      "Bash(node create_report.js)",
+      "Bash(mkdir -p /tmp/docx_report)",
+      "Bash(npm init:*)"
     ]
   }
 }
