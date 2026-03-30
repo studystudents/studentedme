@@ -128,7 +128,7 @@ Based on this profile, provide a detailed admissions analysis. Respond ONLY with
 
     try {
       const completion = await this.client.chat.completions.create({
-        model: 'gemma2-9b-it',
+        model: 'llama-3.1-8b-instant',
         max_tokens: 4096,
         temperature: 0.3,
         messages: [
