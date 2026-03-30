@@ -232,7 +232,7 @@ const en = {
     brandTitle1: 'Your Global',
     brandTitle2: 'Education',
     brandTitle3: 'Awaits.',
-    brandSub: 'Access 10,000+ curated programs across 50+ countries.',
+    brandSub: 'Access 180+ curated programs across 15+ countries.',
   },
   register: {
     badge: 'New Account',
@@ -254,7 +254,7 @@ const en = {
     brandTitle1: 'Begin Your',
     brandTitle2: 'Journey',
     brandTitle3: 'Today.',
-    brandSub: 'Join 12,000+ students who found their path to global education.',
+    brandSub: 'Join students who found their path to global education.',
   },
   programs: {
     badge: 'Programs',
@@ -598,7 +598,7 @@ const ru: typeof en = {
     brandTitle1: 'Твоё глобальное',
     brandTitle2: 'образование',
     brandTitle3: 'ждёт тебя.',
-    brandSub: 'Доступ к 10 000+ программам в 50+ странах.',
+    brandSub: 'Доступ к 180+ программам в 15+ странах.',
   },
   register: {
     badge: 'Новый аккаунт',
@@ -620,7 +620,7 @@ const ru: typeof en = {
     brandTitle1: 'Начни свой',
     brandTitle2: 'путь',
     brandTitle3: 'сегодня.',
-    brandSub: 'Присоединяйтесь к 12 000+ студентов, нашедших своё международное образование.',
+    brandSub: 'Присоединяйтесь к студентам, которые нашли своё международное образование.',
   },
   programs: {
     badge: 'Программы',
