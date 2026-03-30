@@ -44,7 +44,10 @@
       "Bash(vercel logs:*)",
       "Bash(curl -s -X POST https://studented-me-main.vercel.app/api/v1/auth/login -H \"Content-Type: application/json\" -d '{\"\"\"\"email\"\"\"\":\"\"\"\"imastikbaev@gmail.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"test123\"\"\"\"}')",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Generated so far: {len\\(d\\)} entries''''\\)\")",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Generated: {len\\(d\\)}/200 entries''''\\)\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Generated: {len\\(d\\)}/200 entries''''\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Final dataset: {len\\(d\\)} entries''''\\)\")",
+      "Bash(sed -i '' \"s/llama-3.3-70b-versatile/gemma2-9b-it/g\" /Users/insarek/Documents/studented_me-main/src/modules/sop-generator/sop-generator.service.ts)",
+      "Bash(sed -i '' \"s/llama-3.3-70b-versatile/gemma2-9b-it/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)"
     ]
   }
 }
