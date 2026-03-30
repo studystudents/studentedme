@@ -5,11 +5,6 @@ import { PublicNav } from '@/components/public-nav';
 import { PublicFooter } from '@/components/public-footer';
 import { useLanguage } from '@/lib/i18n';
 
-const offices = [
-  { city: 'Boston', country: 'USA', address: '123 Education Street, Boston, MA 02101', phone: '+1 (555) 123-4567', email: 'boston@studented.me' },
-  { city: 'London', country: 'UK', address: '45 Oxford Street, London W1D 2DZ', phone: '+44 20 1234 5678', email: 'london@studented.me' },
-  { city: 'Singapore', country: 'Singapore', address: '1 Marina Boulevard, Singapore 018989', phone: '+65 6123 4567', email: 'singapore@studented.me' },
-];
 
 export default function ContactPage() {
   const { t } = useLanguage();
@@ -65,23 +60,9 @@ export default function ContactPage() {
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.1 }} className="space-y-16">
               <div>
                 <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">{t('contact.general')}</p>
-                <p className="text-lg font-light text-foreground/70">support@studented.me</p>
-                <p className="text-lg font-light text-foreground/70">+1 (555) 123-4567</p>
-                <p className="text-sm text-foreground/40 mt-2">{t('contact.hours')}</p>
-              </div>
-              <div className="border-t border-foreground/10 pt-12">
-                <p className="text-xs uppercase tracking-widest text-foreground/40 mb-8">{t('contact.officesLabel')}</p>
-                <div className="space-y-10">
-                  {offices.map((office) => (
-                    <div key={office.city} className="border-l border-foreground/10 pl-8">
-                      <h3 className="font-serif text-xl mb-1">{office.city}</h3>
-                      <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{office.country}</p>
-                      <p className="text-sm text-foreground/60 font-light">{office.address}</p>
-                      <p className="text-sm text-foreground/60 font-light mt-1">{office.phone}</p>
-                      <p className="text-sm text-primary font-light mt-1">{office.email}</p>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-lg font-light text-foreground/70">amir@placeq.com</p>
+                <p className="text-lg font-light text-foreground/70">+39 378 092 0686</p>
+                <p className="text-sm text-foreground/40 mt-2">24/7</p>
               </div>
             </motion.div>
           </div>
