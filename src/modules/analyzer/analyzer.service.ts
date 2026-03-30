@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { AnalyzeProfileDto } from './dto/analyze-profile.dto';
 
 interface AdmissionProbability {
@@ -32,16 +32,16 @@ export interface AnalysisResult {
 @Injectable()
 export class AnalyzerService {
   private readonly logger = new Logger(AnalyzerService.name);
-  private readonly client: Anthropic;
+  private readonly client: Groq;
 
   constructor(private readonly config: ConfigService) {
-    const apiKey = process.env.ANTHROPIC_API_KEY || this.config.get<string>('ANTHROPIC_API_KEY');
+    const apiKey = process.env.GROQ_API_KEY || this.config.get<string>('GROQ_API_KEY');
     if (!apiKey) {
-      this.logger.warn('ANTHROPIC_API_KEY is not set. AI analysis will not work.');
+      this.logger.warn('GROQ_API_KEY is not set. AI analysis will not work.');
     } else {
-      this.logger.log(`ANTHROPIC_API_KEY loaded (starts with: ${apiKey.substring(0, 12)}...)`);
+      this.logger.log(`GROQ_API_KEY loaded (starts with: ${apiKey.substring(0, 8)}...)`);
     }
-    this.client = new Anthropic({ apiKey: apiKey || 'placeholder' });
+    this.client = new Groq({ apiKey: apiKey || 'placeholder' });
   }
 
   async analyzeProfile(dto: AnalyzeProfileDto): Promise<AnalysisResult> {
@@ -127,13 +127,17 @@ Based on this profile, provide a detailed admissions analysis. Respond ONLY with
 `;
 
     try {
-      const message = await this.client.messages.create({
-        model: 'claude-haiku-4-5',
+      const completion = await this.client.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
         max_tokens: 4096,
-        system: `You are an expert university admissions counselor with 20+ years of experience.
+        temperature: 0.3,
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert university admissions counselor with 20+ years of experience.
 Analyze the student's academic profile and provide detailed, actionable feedback.
 You must respond in valid JSON format only. Do not include any text outside of the JSON object.`,
-        messages: [
+          },
           {
             role: 'user',
             content: userPrompt,
@@ -141,14 +145,7 @@ You must respond in valid JSON format only. Do not include any text outside of t
         ],
       });
 
-      // Extract text content from the response (skip thinking blocks)
-      let jsonText = '';
-      for (const block of message.content) {
-        if (block.type === 'text') {
-          jsonText = block.text;
-          break;
-        }
-      }
+      let jsonText = completion.choices[0]?.message?.content || '';
 
       if (!jsonText) {
         throw new Error('No text response received from Claude');
