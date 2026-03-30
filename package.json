@@ -25,6 +25,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@google-cloud/storage": "^5.18.3",
     "@nestjs/bull": "^11.0.4",
     "@nestjs/common": "^10.3.0",

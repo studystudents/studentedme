@@ -12,6 +12,7 @@ import {
   FolderOpen,
   Settings,
   LogOut,
+  Sparkles,
 } from 'lucide-react';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -25,6 +26,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     { name: t('dashboard.nav.programs'), href: '/dashboard/programs', icon: Search },
     { name: t('dashboard.nav.applications'), href: '/dashboard/applications', icon: FileText },
     { name: t('dashboard.nav.documents'), href: '/dashboard/documents', icon: FolderOpen },
+    { name: 'AI Analyzer', href: '/dashboard/analyzer', icon: Sparkles },
     { name: t('dashboard.nav.settings'), href: '/dashboard/settings', icon: Settings },
   ];
 

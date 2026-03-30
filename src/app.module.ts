@@ -19,6 +19,7 @@ import { UsersModule } from './modules/users/users.module';
 import { OpportunitiesModule } from './modules/opportunities/opportunities.module';
 import { ApplicationsModule } from './modules/applications/applications.module';
 import { DocumentsModule } from './modules/documents/documents.module';
+import { AnalyzerModule } from './modules/analyzer/analyzer.module';
 // import { VisaModule } from './modules/visa/visa.module';
 // import { TasksModule } from './modules/tasks/tasks.module';
 // import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -61,6 +62,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
     // StudentsModule,
     // LeadsModule,
     DocumentsModule,
+    AnalyzerModule,
 
     // VisaModule,
     // TasksModule,

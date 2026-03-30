@@ -1,0 +1,61 @@
+student_id,nationality,university_applied,qs_rank,program_type,field_of_study,gpa,gpa_scale,gre_verbal,gre_quant,gre_awa,ielts,toefl,publications,research_experience_years,internships,work_experience_years,olympiad_winner,hackathon_wins,open_source_projects,github_stars,kaggle_rank,recommendation_letters,sop_quality,extracurricular_activities,undergrad_university_rank,gap_year,scholarship_applied,accepted,volunteer_hours,awards_count,languages_spoken,leadership_roles,motivation_letter_quality,interview_score
+S001,Kazakh,ETH Zurich,7,MASTER,Computer Science,3.8,4.0,158,168,4.5,7.5,,2,2,1,0,0,1,3,450,Expert,3,Excellent,4,150,0,1,1,120,4,3,2,Excellent,8
+S002,Kazakh,University of Toronto,34,MASTER,Data Science,3.5,4.0,152,162,3.5,6.5,,0,1,2,1,0,0,1,80,Novice,2,Good,2,200,0,1,1,60,2,2,1,Good,0
+S003,Uzbek,TU Munich,50,MASTER,Mechanical Engineering,3.7,5.0,,,, 7.0,,1,2,1,0,0,0,0,0,,3,Good,3,300,0,0,1,80,3,2,2,Good,7
+S004,Uzbek,University of Michigan,23,MASTER,Electrical Engineering,3.2,4.0,145,155,3.0,6.0,,0,0,3,2,0,0,0,0,,2,Average,2,500,0,1,0,40,1,2,0,Average,0
+S005,Kyrgyz,Heidelberg University,65,BACHELOR,Biology,3.9,5.0,,,,7.5,,0,0,0,0,0,0,0,0,,2,Good,5,400,0,1,1,200,3,3,3,Good,0
+S006,Kyrgyz,University of Warsaw,501,BACHELOR,Business Administration,3.0,5.0,,,,5.5,,0,0,1,0,0,0,0,0,,1,Weak,1,600,0,0,0,20,0,2,0,Weak,0
+S007,Russian,MIT,1,PHD,Machine Learning,3.95,4.0,168,170,5.0,,,5,4,0,2,1,3,8,2000,Grandmaster,3,Excellent,3,50,0,1,1,50,8,2,2,Excellent,10
+S008,Russian,Stanford University,3,PHD,Computer Vision,3.9,4.0,165,169,4.5,,,3,3,1,1,0,2,5,1200,Master,3,Excellent,4,80,0,1,1,30,6,2,2,Excellent,9
+S009,Russian,HSE Moscow,251,BACHELOR,Economics,3.1,5.0,,,,,,0,0,0,0,0,0,0,0,,1,Average,2,800,0,0,0,10,1,1,0,Weak,0
+S010,Ukrainian,University of Edinburgh,22,MASTER,Software Engineering,3.6,4.0,155,165,4.0,7.0,,1,2,2,1,0,1,2,300,Contributor,3,Good,3,180,0,1,1,90,3,3,1,Good,8
+S011,Ukrainian,KU Leuven,45,MASTER,Bioinformatics,3.4,4.0,150,158,3.5,6.5,,1,1,1,0,0,0,1,60,Novice,2,Average,2,250,0,1,0,70,2,2,1,Average,0
+S012,Chinese,Peking University,14,PHD,Physics,3.85,4.0,162,170,4.0,,,4,3,0,2,1,1,2,400,Expert,3,Excellent,2,30,0,0,1,20,5,2,1,Excellent,9
+S013,Chinese,University of Manchester,51,MASTER,Finance,3.3,4.0,148,155,3.0,6.5,,0,0,2,1,0,0,0,0,,2,Average,2,350,0,1,0,40,1,3,0,Average,0
+S014,Chinese,Carnegie Mellon,25,MASTER,Robotics,3.75,4.0,160,168,4.5,,,2,2,1,1,0,2,4,800,Expert,3,Good,3,100,0,1,1,80,4,2,2,Good,8
+S015,Indian,IIT Bombay,172,BACHELOR,Computer Science,3.5,4.0,155,165,4.0,,,0,1,1,0,0,1,2,250,Contributor,2,Good,4,200,0,0,1,150,2,2,2,Good,0
+S016,Indian,Columbia University,12,MASTER,Financial Engineering,3.7,4.0,158,168,4.0,,,0,1,3,2,0,0,0,0,,3,Excellent,3,180,0,1,1,60,3,3,1,Excellent,9
+S017,Indian,NIT Trichy,801,BACHELOR,Mechanical Engineering,2.8,4.0,138,148,2.5,5.5,,0,0,1,0,0,0,0,0,,1,Weak,1,1000,0,0,0,10,0,2,0,Weak,0
+S018,Turkish,Middle East Technical,601,MASTER,Civil Engineering,3.2,4.0,142,152,3.0,6.0,,0,1,2,1,0,0,0,0,,2,Average,2,450,0,0,0,30,1,2,0,Average,0
+S019,Turkish,Delft University,57,MASTER,Aerospace Engineering,3.6,4.0,152,162,3.5,7.0,,1,2,1,0,0,0,1,80,Novice,3,Good,2,280,0,1,1,100,3,2,1,Good,7
+S020,Turkish,Bogazici University,451,BACHELOR,Physics,3.8,4.0,,,,,,,0,0,0,0,0,0,0,0,,2,Good,3,300,0,0,1,80,2,3,1,Good,0
+S021,Kazakh,University of Amsterdam,61,MASTER,International Relations,3.3,5.0,,,,7.5,,0,1,1,0,0,0,0,0,,2,Average,3,200,0,1,0,120,2,4,1,Average,0
+S022,Kazakh,Nazarbayev University,251,BACHELOR,Chemistry,3.7,4.0,,,,7.0,,0,1,0,0,0,0,0,0,,2,Good,2,300,1,0,1,90,3,3,1,Good,0
+S023,Uzbek,Vienna University,=150,MASTER,Mathematics,3.9,5.0,155,165,4.0,7.5,,1,2,0,0,1,0,1,120,Novice,3,Good,2,250,0,1,1,60,4,2,1,Excellent,8
+S024,Uzbek,Humboldt University,=128,MASTER,History,3.1,5.0,,,,6.5,,0,0,0,0,0,0,0,0,,1,Average,2,400,1,0,0,30,1,3,0,Average,0
+S025,Kyrgyz,Corvinus Budapest,801,BACHELOR,Business,2.9,5.0,,,,5.0,,0,0,0,0,0,0,0,0,,1,Weak,1,700,0,0,0,10,0,2,0,Weak,0
+S026,Russian,EPFL,11,PHD,Materials Science,3.88,4.0,160,167,4.5,,,3,4,0,2,0,1,3,600,Expert,3,Excellent,2,40,0,1,1,30,6,2,2,Excellent,9
+S027,Russian,University of Vienna,=130,MASTER,Psychology,3.2,5.0,,,,6.5,,0,0,1,0,0,0,0,0,,2,Average,3,350,0,0,0,50,1,2,1,Average,0
+S028,Ukrainian,McGill University,46,MASTER,Biochemistry,3.5,4.0,148,158,3.5,6.5,,1,2,0,0,0,0,1,40,Novice,2,Good,2,220,0,1,1,80,2,2,1,Good,7
+S029,Ukrainian,Kyiv Polytechnic,601,BACHELOR,Electronics,3.3,5.0,,,,,,,0,1,1,0,0,0,0,0,,2,Average,2,500,0,0,0,60,1,2,0,Average,0
+S030,Chinese,Tsinghua University,25,PHD,Artificial Intelligence,3.92,4.0,165,170,5.0,,,6,4,0,3,1,2,6,1500,Grandmaster,3,Excellent,2,20,0,1,1,20,7,2,2,Excellent,10
+S031,Chinese,University of Bristol,=101,MASTER,Architecture,3.4,4.0,,,,,7.0,,0,1,1,0,0,0,0,0,,2,Average,3,300,0,1,0,70,2,3,1,Average,0
+S032,Indian,IIIT Hyderabad,601,MASTER,Cybersecurity,3.55,4.0,152,160,3.5,,,0,1,2,1,0,1,3,350,Contributor,3,Good,3,120,0,1,1,100,3,2,1,Good,8
+S033,Indian,IISc Bangalore,155,PHD,Quantum Computing,3.85,4.0,162,169,4.5,,,3,3,0,2,0,1,2,280,Expert,3,Excellent,2,40,0,1,1,30,5,2,1,Excellent,9
+S034,Indian,Amity University,1001,BACHELOR,Commerce,2.5,4.0,,,,5.0,,0,0,0,0,0,0,0,0,,1,Weak,1,1500,0,0,0,5,0,2,0,Weak,0
+S035,Turkish,Eindhoven University,124,MASTER,Electrical Engineering,3.5,4.0,150,160,3.5,7.0,,1,1,2,1,0,0,1,90,Novice,2,Good,2,350,0,1,1,70,3,2,1,Good,7
+S036,Turkish,University of Warsaw,501,MASTER,Sociology,3.0,4.0,,,,6.0,,0,0,1,0,0,0,0,0,,1,Average,2,600,0,0,0,30,1,3,0,Average,0
+S037,Kazakh,University of Calgary,=200,MASTER,Environmental Science,3.4,4.0,,,,7.0,,0,1,0,1,0,0,0,0,,2,Good,3,250,0,1,1,110,2,3,2,Good,0
+S038,Uzbek,University of Bologna,=154,MASTER,Italian Language,3.2,5.0,,,,6.5,,0,0,1,0,0,0,0,0,,1,Average,2,350,1,0,0,40,1,4,0,Average,0
+S039,Kyrgyz,American University,=201,BACHELOR,Political Science,3.6,5.0,,,,7.0,,0,0,2,0,0,0,0,0,,2,Good,4,400,0,1,1,150,2,4,2,Good,0
+S040,Russian,Lomonosov MSU,=84,PHD,Mathematics,3.9,5.0,162,170,5.0,,,4,4,0,3,1,0,2,200,Expert,3,Excellent,2,60,0,0,1,40,6,2,2,Excellent,10
+S041,Russian,MGIMO,=801,BACHELOR,International Law,3.0,5.0,,,,6.0,,0,0,1,0,0,0,0,0,,1,Average,2,700,0,0,0,20,1,2,0,Average,0
+S042,Ukrainian,University of Glasgow,=92,MASTER,Public Health,3.45,4.0,,,,,6.5,,0,1,1,0,0,0,0,0,,2,Good,3,300,0,1,1,90,2,3,1,Good,7
+S043,Chinese,Fudan University,=31,MASTER,Economics,3.6,4.0,155,162,4.0,,,1,2,1,1,0,0,1,150,Novice,3,Good,3,180,0,1,1,60,3,3,1,Good,8
+S044,Chinese,Arizona State,=201,MASTER,Supply Chain,3.1,4.0,142,150,3.0,5.5,,0,0,2,1,0,0,0,0,,2,Average,2,450,0,0,0,30,1,2,0,Average,0
+S045,Indian,VIT Vellore,801,BACHELOR,Information Technology,3.2,4.0,148,155,3.0,,,0,1,1,0,0,0,1,80,Novice,2,Average,2,600,0,1,0,50,1,2,1,Average,0
+S046,Indian,IIM Ahmedabad,=201,MASTER,Management,3.7,4.0,158,162,4.0,,,0,0,3,3,0,1,0,0,,3,Excellent,4,200,0,1,1,80,4,3,3,Excellent,9
+S047,Turkish,Sabanci University,=401,MASTER,Industrial Engineering,3.3,4.0,145,155,3.5,6.5,,0,1,1,0,0,0,1,60,Novice,2,Average,2,380,0,0,0,50,2,2,1,Average,0
+S048,Kazakh,Sorbonne University,=83,MASTER,Literature,3.5,5.0,,,,7.5,,0,0,1,0,0,0,0,0,,2,Good,4,250,0,1,1,100,3,5,2,Good,0
+S049,Uzbek,University of Helsinki,=119,MASTER,Public Administration,3.3,5.0,,,,7.0,,0,1,0,0,0,0,0,0,,2,Average,2,300,0,1,0,80,2,3,1,Average,0
+S050,Kyrgyz,University of the People,,,BACHELOR,Business,2.7,5.0,,,,5.5,,0,0,0,0,0,0,0,0,,1,Weak,1,,,0,0,0,15,0,2,0,Weak,0
+S051,Russian,Novosibirsk State,=250,PHD,Physics,3.75,5.0,158,165,4.0,,,2,3,0,2,0,0,2,180,Expert,3,Good,2,200,0,0,1,30,4,2,1,Good,8
+S052,Ukrainian,Czech Technical,=551,MASTER,Automotive Engineering,3.4,5.0,,,,,6.5,,0,1,1,0,0,0,1,50,Novice,2,Average,2,450,0,0,0,60,2,2,0,Average,0
+S053,Chinese,UCLA,=40,MASTER,Statistics,3.8,4.0,162,169,4.5,,,2,2,1,1,0,1,3,500,Expert,3,Excellent,3,120,0,1,1,70,5,2,2,Excellent,9
+S054,Chinese,Wuhan University,=225,BACHELOR,Medicine,3.65,4.0,,,,,,,0,1,0,0,0,0,0,0,,2,Good,2,300,0,0,1,50,3,2,1,Good,0
+S055,Indian,University of Sydney,=41,MASTER,Data Analytics,3.55,4.0,152,160,3.5,,,0,1,2,2,0,1,2,200,Contributor,2,Good,3,250,0,1,1,90,3,3,1,Good,8
+S056,Indian,Delhi University,=521,BACHELOR,English Literature,3.2,4.0,155,148,4.0,,,0,0,1,0,0,0,0,0,,2,Average,3,400,0,0,0,70,1,3,1,Average,0
+S057,Turkish,KTH Stockholm,=98,MASTER,Sustainable Energy,3.55,4.0,150,158,3.5,7.0,,1,2,0,1,0,0,1,100,Novice,2,Good,2,280,0,1,1,90,3,2,2,Good,7
+S058,Kazakh,Nazarbayev University,=251,MASTER,Oil and Gas,3.45,4.0,,,,7.0,,0,1,1,1,0,0,0,0,,2,Average,2,280,0,0,1,70,2,2,1,Average,0
+S059,Uzbek,KIMEP University,=801,BACHELOR,Finance,3.0,5.0,,,,6.0,,0,0,1,0,0,0,0,0,,1,Average,2,600,0,0,0,25,1,3,0,Average,0
+S060,Kyrgyz,University of Central Asia,,,MASTER,Development Studies,3.35,5.0,,,,7.0,,0,1,1,0,0,0,0,0,,2,Good,3,300,0,1,1,130,2,4,2,Good,0
