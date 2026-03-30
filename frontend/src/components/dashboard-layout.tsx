@@ -14,6 +14,7 @@ import {
   LogOut,
   Sparkles,
   CalendarClock,
+  History,
 } from 'lucide-react';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -30,6 +31,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     { name: 'Deadlines', href: '/dashboard/deadlines', icon: CalendarClock },
     { name: 'AI Analyzer', href: '/dashboard/analyzer', icon: Sparkles },
     { name: 'SOP Generator', href: '/dashboard/sop-generator', icon: FileText },
+    { name: 'History', href: '/dashboard/history', icon: History },
     { name: t('dashboard.nav.settings'), href: '/dashboard/settings', icon: Settings },
   ];
 
