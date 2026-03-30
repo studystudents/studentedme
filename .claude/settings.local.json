@@ -2,7 +2,40 @@
   "permissions": {
     "allow": [
       "Bash(lsof:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(pip3 install:*)",
+      "Bash(node -e \"require\\(''''./prisma/seed''''\\)\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(curl -s \"http://localhost:4000/api/v1/opportunities?limit=1\")",
+      "Bash(curl -s \"https://studented-me-main.vercel.app/api/v1/opportunities?limit=1\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://frontend-theta-nine-83.vercel.app/dashboard/programs\")",
+      "Bash(find /Users/insarek/Documents/studented_me-main/studentedmetest -name .env*)",
+      "Bash(vercel env:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.abgbpkjrrtalwqxblbdc:hedqo9-xijfeq-gyXwep@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres\" node -e \":*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.abgbpkjrrtalwqxblbdc:hedqo9-xijfeq-gyXwep@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres\" DIRECT_URL=\"postgresql://postgres.abgbpkjrrtalwqxblbdc:hedqo9-xijfeq-gyXwep@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres\" npx ts-node /tmp/seed_prod.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.abgbpkjrrtalwqxblbdc:hedqo9-xijfeq-gyXwep@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres\" DIRECT_URL=\"postgresql://postgres.abgbpkjrrtalwqxblbdc:hedqo9-xijfeq-gyXwep@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres\" npx ts-node prisma/seed_prod.ts)",
+      "Bash(curl -s \"https://studented-me-main.vercel.app/api/v1/opportunities?limit=5\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''Total:'''', d[''''meta''''][''''total'''']\\)\")",
+      "Bash(curl -s \"https://studented-me-main.vercel.app/api/v1/opportunities?limit=3\")",
+      "Bash(vercel deploy:*)",
+      "Bash(GIT_INDEX_LOCK_TIMEOUT=10 git commit -m \"feat: add public programs page on landing:*)",
+      "Bash(npx vercel:*)",
+      "Read(//Users/insarek/.local/share/com.vercel.cli/**)",
+      "Read(//Users/insarek/.vercel/**)",
+      "Read(//Users/insarek/.config/**)",
+      "Bash(security find-internet-password:*)",
+      "Bash(security find-generic-password:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(v.get\\(''''token'''',''''''''\\)\\) for v in d.values\\(\\)]\")",
+      "Bash(TOKEN=\"vcr_7d5kqHMsLKXoOuT8bGZNcFjCp7yBYRrjWoa2SF8G88lxfoj9bF0Z2QTr\" curl -s -X POST \"https://api.vercel.com/v10/projects/prj_yH1ftKOziWdeAXwq3SlgetFQURb3/domains?teamId=team_BKmh08MCShMRXaxEhkWArmDf\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"studented.me\"\"\"\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(TOKEN=\"vca_4bukIQMj6qs0dgwnSqdyqRR9M9RFgsv2Q0Dx9WdsNAdUwvDXIv4QvDUv\" curl -s -X POST \"https://api.vercel.com/v10/projects/prj_yH1ftKOziWdeAXwq3SlgetFQURb3/domains?teamId=team_BKmh08MCShMRXaxEhkWArmDf\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"studented.me\"\"\"\"}')",
+      "Bash(TOKEN=\"vca_4bukIQMj6qs0dgwnSqdyqRR9M9RFgsv2Q0Dx9WdsNAdUwvDXIv4QvDUv\" curl -s -X POST \"https://api.vercel.com/v10/projects/prj_yH1ftKOziWdeAXwq3SlgetFQURb3/domains?teamId=team_BKmh08MCShMRXaxEhkWArmDf\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"www.studented.me\"\"\"\",\"\"\"\"redirect\"\"\"\":\"\"\"\"studented.me\"\"\"\",\"\"\"\"redirectStatusCode\"\"\"\":308}')",
+      "WebFetch(domain:www.linkedin.com)"
     ]
   }
 }
