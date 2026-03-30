@@ -40,7 +40,8 @@
       "Skill(claude-api)",
       "Skill(claude-api:*)",
       "Bash(find /Users/insarek/Documents/studented_me-main/frontend/src -name dashboard-layout* -o -name layout.tsx)",
-      "Bash(wait)"
+      "Bash(wait)",
+      "Bash(vercel logs:*)"
     ]
   }
 }

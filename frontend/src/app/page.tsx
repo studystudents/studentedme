@@ -123,9 +123,9 @@ export default function HomePage() {
 
             <motion.div variants={fadeInUp} className="lg:col-start-9 lg:col-span-4 flex flex-col gap-10 border-l border-foreground/10 pl-12">
               {[
-                { num: '50+', label: t('home.stats3') },
-                { num: '10k', label: t('home.stats2') },
-                { num: '95%', label: t('home.stats4') },
+                { num: '157+', label: t('home.stats3') },
+                { num: '70+', label: t('home.stats2') },
+                { num: '15+', label: t('home.stats4') },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div className="text-5xl font-serif text-foreground mb-1">{stat.num}</div>
