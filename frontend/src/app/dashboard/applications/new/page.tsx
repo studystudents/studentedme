@@ -147,7 +147,7 @@ function ApplicationWizardContent() {
                     <div>
                        <p className="text-sm text-gray-500 mb-1">Opportunity Type</p>
                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {opportunity.opportunityType.replace('_', ' ')}
+                          {((opportunity as any).type || opportunity.opportunityType || 'PROGRAM').replace('_', ' ')}
                        </span>
                     </div>
                   </div>
