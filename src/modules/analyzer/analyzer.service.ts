@@ -126,11 +126,8 @@ Based on this profile, provide a detailed admissions analysis. Respond ONLY with
 
     try {
       const message = await this.client.messages.create({
-        model: 'claude-opus-4-6',
-        max_tokens: 16000,
-        thinking: {
-          type: 'adaptive',
-        },
+        model: 'claude-haiku-4-5',
+        max_tokens: 4096,
         system: `You are an expert university admissions counselor with 20+ years of experience.
 Analyze the student's academic profile and provide detailed, actionable feedback.
 You must respond in valid JSON format only. Do not include any text outside of the JSON object.`,
