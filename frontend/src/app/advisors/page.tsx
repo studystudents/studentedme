@@ -8,12 +8,24 @@ import { PublicFooter } from '@/components/public-footer';
 import { useLanguage } from '@/lib/i18n';
 
 const advisors = [
-  { name: 'Dr. Amara Osei', role: 'Senior Counselor — Europe', regions: ['UK', 'Germany', 'Netherlands'], langs: 'English, French', years: 14, placements: 320, bio: 'Former Dean of International Admissions at Harvard Extension. Specialist in top-50 European universities and research programs.' },
-  { name: 'Yuki Tanaka', role: 'Senior Counselor — Asia Pacific', regions: ['Japan', 'South Korea', 'Australia'], langs: 'English, Japanese', years: 12, placements: 290, bio: 'Oxford and Tokyo alumni. Deep expertise in guiding students from Japan, Korea, and Southeast Asia into global institutions.' },
-  { name: 'Natalia Reyes', role: 'Education Counselor — Americas', regions: ['USA', 'Canada', 'Spain'], langs: 'English, Spanish', years: 9, placements: 210, bio: 'LSE graduate with a track record in Ivy League and liberal arts college placements. Known for exceptional essay coaching.' },
-  { name: 'Priya Sharma', role: 'Visa & Immigration Specialist', regions: ['UK', 'EU', 'Canada'], langs: 'English, Hindi', years: 11, placements: 450, bio: 'Former UK immigration officer. Expert in student visa applications across Schengen countries, UK, and Canada.' },
-  { name: 'Lena Fischer', role: 'Scholarships Director', regions: ['Germany', 'Austria', 'Switzerland'], langs: 'English, German', years: 13, placements: 180, bio: 'Has secured over $14M in scholarships for students over her career. DAAD and Erasmus Mundus specialist.' },
-  { name: 'James McAllister', role: 'Strategy Counselor — STEM', regions: ['USA', 'UK', 'Singapore'], langs: 'English', years: 8, placements: 195, bio: 'MIT-trained counselor focused on STEM and engineering programs. Expert in research university admissions and graduate applications.' },
+  {
+    name: 'Amir Mastikbayev',
+    role: 'Co-founder — Data & Strategy',
+    regions: ['Italy', 'Turkey', 'Spain'],
+    langs: 'English, Russian, Kazakh',
+    years: 3,
+    placements: 50,
+    bio: 'MSc Data Analytics graduate from Università Ca\' Foscari Venezia (110/110). Built Studented.me to help students find and apply to the right programs. Combines data-driven thinking with first-hand experience studying across Europe.',
+  },
+  {
+    name: 'Tomiris Zhumagaliyeva',
+    role: 'Educational Advisor',
+    regions: ['Italy', 'Azerbaijan', 'Kazakhstan'],
+    langs: 'English, Russian, Kazakh',
+    years: 2,
+    placements: 40,
+    bio: 'BA Economics & Finance, Università Ca\' Foscari Venezia. Educational consultant with experience at SmarTestPrep, AB Education and Impact Admissions. Advised students on top global universities, admissions strategy, and Italian visa compliance. Erasmus+ alumna across three countries.',
+  },
 ];
 
 export default function AdvisorsPage() {
@@ -46,10 +58,10 @@ export default function AdvisorsPage() {
         <section className="py-16 px-6 lg:px-12 border-b border-foreground/10">
           <div className="max-w-[90rem] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { num: '6', label: t('advisors.advisors') },
-              { num: '10+', label: t('advisors.languages') },
-              { num: '50+', label: t('advisors.countries') },
-              { num: '1,600+', label: t('advisors.placed') },
+              { num: '2', label: t('advisors.advisors') },
+              { num: '3', label: t('advisors.languages') },
+              { num: '5+', label: t('advisors.countries') },
+              { num: '90+', label: t('advisors.placed') },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-5xl font-serif text-foreground mb-2">{stat.num}</div>
