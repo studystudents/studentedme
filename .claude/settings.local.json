@@ -49,7 +49,8 @@
       "Bash(sed -i '' \"s/llama-3.3-70b-versatile/gemma2-9b-it/g\" /Users/insarek/Documents/studented_me-main/src/modules/sop-generator/sop-generator.service.ts)",
       "Bash(sed -i '' \"s/llama-3.3-70b-versatile/gemma2-9b-it/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)",
       "Bash(sed -i '' \"s/gemma2-9b-it/llama-3.1-8b-instant/g\" /Users/insarek/Documents/studented_me-main/src/modules/sop-generator/sop-generator.service.ts)",
-      "Bash(sed -i '' \"s/gemma2-9b-it/llama-3.1-8b-instant/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)"
+      "Bash(sed -i '' \"s/gemma2-9b-it/llama-3.1-8b-instant/g\" /Users/insarek/Documents/studented_me-main/src/modules/analyzer/analyzer.service.ts)",
+      "Bash(head -20 grep -n \"navItems\\\\|deadline\\\\|Deadline\" /Users/insarek/Documents/studented_me-main/frontend/src/components/dashboard-layout.tsx)"
     ]
   }
 }
