@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
@@ -15,6 +15,8 @@ import {
   Sparkles,
   CalendarClock,
   History,
+  Menu,
+  X,
 } from 'lucide-react';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -22,6 +24,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading, logout, checkAuth } = useAuth();
   const { t, locale, setLocale } = useLanguage();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
     { name: t('dashboard.nav.dashboard'), href: '/dashboard', icon: LayoutDashboard },
@@ -45,6 +48,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthenticated, isLoading, router]);
 
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     await logout();
     router.push('/');
@@ -62,8 +70,20 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background flex">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 w-64 bg-foreground text-background flex flex-col border-r border-foreground/10">
+      <aside
+        className={`fixed inset-y-0 left-0 w-64 bg-foreground text-background flex flex-col border-r border-foreground/10 z-30 transition-transform duration-300 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
         {/* Logo */}
         <div className="px-8 py-8 border-b border-background/10">
           <Link href="/">
@@ -112,7 +132,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         {/* Language switcher */}
         <div className="px-6 py-4 border-b border-background/10">
           <div className="flex items-center border border-background/20 overflow-hidden w-fit">
-            {(['en', 'ru'] as const).map((l) => (
+            {(['en', 'ru', 'kz'] as const).map((l) => (
               <button
                 key={l}
                 onClick={() => setLocale(l)}
@@ -136,8 +156,21 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="ml-64 flex-1 min-h-screen bg-background p-8">
-        {children}
+      <main className="flex-1 min-h-screen bg-background md:ml-64">
+        {/* Mobile top bar */}
+        <div className="md:hidden flex items-center gap-4 px-4 py-4 border-b border-foreground/10 sticky top-0 bg-background z-10">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 text-foreground/60 hover:text-foreground transition-colors"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <span className="text-lg font-serif font-black tracking-tight text-foreground">Studented.me</span>
+        </div>
+        <div className="p-4 md:p-8">
+          {children}
+        </div>
       </main>
     </div>
   );

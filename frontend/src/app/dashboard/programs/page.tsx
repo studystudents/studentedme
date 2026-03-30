@@ -146,7 +146,7 @@ export default function ProgramsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6">
           <div>
             <p className="text-xs uppercase tracking-widest text-foreground/40 mb-2">{t('dashboard.programs.typeLabel')}</p>
             <div className="flex gap-1">
@@ -225,91 +225,106 @@ export default function ProgramsPage() {
               {programs.map((program) => (
                 <div
                   key={program.id}
-                  className="border-t border-foreground/10 py-6 grid grid-cols-12 gap-4 group hover:bg-foreground/[0.02] transition-colors -mx-2 px-2"
+                  className="border-t border-foreground/10 py-4 md:py-6 flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 group hover:bg-foreground/[0.02] transition-colors -mx-2 px-2"
                 >
-                  {/* Degree badge + ranking */}
-                  <div className="col-span-1 pt-0.5 flex flex-col gap-1.5">
-                    <span className="text-xs border border-foreground/10 px-2 py-0.5 text-foreground/40 w-fit whitespace-nowrap">
-                      {DEGREE_LABEL[program.degreeLevel] || program.degreeLevel}
-                    </span>
-                    {program.institution.ranking && (
-                      <span className="text-xs text-primary font-medium">#{program.institution.ranking}</span>
-                    )}
-                  </div>
-
-                  {/* Name + university */}
-                  <div className="col-span-4 flex items-start gap-3">
-                    {/* Logo */}
-                    <div className="h-8 w-8 flex-shrink-0 border border-foreground/8 flex items-center justify-center overflow-hidden bg-white">
-                      {program.institution.logo ? (
-                        <img
-                          src={program.institution.logo}
-                          alt={program.institution.name}
-                          className="h-6 w-6 object-contain"
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      ) : (
-                        <span className="text-xs font-serif text-foreground/40">
-                          {program.institution.name[0]}
-                        </span>
+                  {/* Top row on mobile: badge + name + apply btn */}
+                  <div className="flex items-start gap-3 md:contents">
+                    {/* Degree badge + ranking */}
+                    <div className="md:col-span-1 pt-0.5 flex flex-col gap-1.5 flex-shrink-0">
+                      <span className="text-xs border border-foreground/10 px-2 py-0.5 text-foreground/40 w-fit whitespace-nowrap">
+                        {DEGREE_LABEL[program.degreeLevel] || program.degreeLevel}
+                      </span>
+                      {program.institution.ranking && (
+                        <span className="text-xs text-primary font-medium">#{program.institution.ranking}</span>
                       )}
                     </div>
-                    <div>
-                      <h3 className="font-serif text-base font-medium group-hover:text-primary transition-colors leading-snug mb-1">
-                        {program.name}
-                      </h3>
-                      <div className="flex items-center gap-1.5 text-foreground/50 text-xs">
-                        <GraduationCap className="h-3 w-3 flex-shrink-0" />
-                        <span>{program.institution.name}</span>
+
+                    {/* Name + university */}
+                    <div className="md:col-span-4 flex items-start gap-3 flex-1">
+                      {/* Logo */}
+                      <div className="h-8 w-8 flex-shrink-0 border border-foreground/8 flex items-center justify-center overflow-hidden bg-white">
+                        {program.institution.logo ? (
+                          <img
+                            src={program.institution.logo}
+                            alt={program.institution.name}
+                            className="h-6 w-6 object-contain"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          <span className="text-xs font-serif text-foreground/40">
+                            {program.institution.name[0]}
+                          </span>
+                        )}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-serif text-base font-medium group-hover:text-primary transition-colors leading-snug mb-1">
+                          {program.name}
+                        </h3>
+                        <div className="flex items-center gap-1.5 text-foreground/50 text-xs">
+                          <GraduationCap className="h-3 w-3 flex-shrink-0" />
+                          <span className="truncate">{program.institution.name}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Apply btn: show on mobile at the top right */}
+                    <div className="md:hidden flex-shrink-0">
+                      <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
+                        <button className="h-8 px-3 text-xs border border-foreground/15 text-foreground/60 hover:bg-foreground hover:text-background hover:border-foreground transition-colors whitespace-nowrap">
+                          {t('dashboard.programs.applyBtn')}
+                        </button>
+                      </Link>
                     </div>
                   </div>
 
-                  {/* Field + language */}
-                  <div className="col-span-2 flex flex-col gap-1 justify-center">
-                    {program.fieldOfStudy && (
-                      <span className="text-xs text-foreground/60">{program.fieldOfStudy}</span>
-                    )}
-                    {program.language && (
-                      <span className="text-xs text-foreground/30 uppercase tracking-wide">{program.language}</span>
-                    )}
-                  </div>
-
-                  {/* Location + duration */}
-                  <div className="col-span-2 flex flex-col gap-1 justify-center">
-                    <div className="flex items-center gap-1 text-xs text-foreground/50">
-                      <MapPin className="h-3 w-3 flex-shrink-0" />
-                      <span>{program.city}, {program.country}</span>
+                  {/* Secondary info row on mobile */}
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 md:contents pl-0 md:pl-0">
+                    {/* Field + language */}
+                    <div className="md:col-span-2 flex flex-col gap-1 justify-center">
+                      {program.fieldOfStudy && (
+                        <span className="text-xs text-foreground/60">{program.fieldOfStudy}</span>
+                      )}
+                      {program.language && (
+                        <span className="text-xs text-foreground/30 uppercase tracking-wide">{program.language}</span>
+                      )}
                     </div>
-                    {program.durationMonths && (
-                      <div className="flex items-center gap-1 text-xs text-foreground/40">
-                        <Clock className="h-3 w-3 flex-shrink-0" />
-                        <span>{program.durationMonths} mo.</span>
+
+                    {/* Location + duration */}
+                    <div className="md:col-span-2 flex flex-col gap-1 justify-center">
+                      <div className="flex items-center gap-1 text-xs text-foreground/50">
+                        <MapPin className="h-3 w-3 flex-shrink-0" />
+                        <span>{program.city}, {program.country}</span>
                       </div>
-                    )}
-                  </div>
+                      {program.durationMonths && (
+                        <div className="flex items-center gap-1 text-xs text-foreground/40">
+                          <Clock className="h-3 w-3 flex-shrink-0" />
+                          <span>{program.durationMonths} mo.</span>
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Tuition */}
-                  <div className="col-span-2 flex flex-col gap-1 justify-center">
-                    {Number(program.tuitionFee) > 0 ? (
-                      <span className="text-sm font-serif text-foreground/80">
-                        {Number(program.tuitionFee).toLocaleString()} <span className="text-xs text-foreground/40">{program.currency}</span>
-                      </span>
-                    ) : (
-                      <span className="text-sm font-serif text-emerald-600">Free</span>
-                    )}
-                    {program.intakeSeason && (
-                      <span className="text-xs text-foreground/30">{program.intakeSeason}</span>
-                    )}
-                  </div>
+                    {/* Tuition */}
+                    <div className="md:col-span-2 flex flex-col gap-1 justify-center">
+                      {Number(program.tuitionFee) > 0 ? (
+                        <span className="text-sm font-serif text-foreground/80">
+                          {Number(program.tuitionFee).toLocaleString()} <span className="text-xs text-foreground/40">{program.currency}</span>
+                        </span>
+                      ) : (
+                        <span className="text-sm font-serif text-emerald-600">Free</span>
+                      )}
+                      {program.intakeSeason && (
+                        <span className="text-xs text-foreground/30">{program.intakeSeason}</span>
+                      )}
+                    </div>
 
-                  {/* Actions */}
-                  <div className="col-span-1 flex items-center justify-end gap-2">
-                    <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
-                      <button className="h-8 px-3 text-xs border border-foreground/15 text-foreground/60 hover:bg-foreground hover:text-background hover:border-foreground transition-colors whitespace-nowrap">
-                        {t('dashboard.programs.applyBtn')}
-                      </button>
-                    </Link>
+                    {/* Actions - desktop only */}
+                    <div className="hidden md:flex md:col-span-1 items-center justify-end gap-2">
+                      <Link href={`/dashboard/applications/new?opportunityId=${program.id}`}>
+                        <button className="h-8 px-3 text-xs border border-foreground/15 text-foreground/60 hover:bg-foreground hover:text-background hover:border-foreground transition-colors whitespace-nowrap">
+                          {t('dashboard.programs.applyBtn')}
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, GraduationCap, Globe2, FileCheck, MapPin } from 'lucide-react';
+import { ArrowUpRight, GraduationCap, Globe2, FileCheck, MapPin, Menu, X } from 'lucide-react';
 import { PublicFooter } from '@/components/public-footer';
 import { useLanguage, type Locale } from '@/lib/i18n';
+import { useState } from 'react';
 
 export default function HomePage() {
   const { t, locale, setLocale } = useLanguage();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const stagger = {
     animate: {
@@ -43,8 +45,10 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="relative z-50 border-b border-black/5">
         <div className="max-w-[90rem] mx-auto px-6 lg:px-12">
-          <div className="flex justify-between items-center h-24">
-            <span className="text-3xl font-serif font-black tracking-tight text-foreground">Studented.me</span>
+          <div className="flex justify-between items-center h-20 md:h-24">
+            <span className="text-2xl md:text-3xl font-serif font-black tracking-tight text-foreground">Studented.me</span>
+
+            {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-8">
               {[
                 { href: '/about', label: t('nav.about') },
@@ -58,7 +62,9 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-            <div className="flex gap-4 items-center">
+
+            {/* Desktop right side */}
+            <div className="hidden md:flex gap-4 items-center">
               <div className="flex items-center border border-foreground/10 overflow-hidden">
                 {(['en', 'ru'] as Locale[]).map((l) => (
                   <button
@@ -79,13 +85,67 @@ export default function HomePage() {
                 <Button className="rounded-none bg-foreground text-background hover:bg-foreground/90 px-8 h-12 text-sm tracking-wide uppercase shadow-none">{t('nav.cta')}</Button>
               </Link>
             </div>
+
+            {/* Mobile: language + hamburger */}
+            <div className="flex md:hidden items-center gap-3">
+              <div className="flex items-center border border-foreground/10 overflow-hidden">
+                {(['en', 'ru'] as Locale[]).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLocale(l)}
+                    className={`px-2 h-7 text-xs uppercase tracking-widest transition-colors ${
+                      locale === l
+                        ? 'bg-foreground text-background'
+                        : 'text-foreground/40 hover:text-foreground'
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-foreground/60 hover:text-foreground transition-colors"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-foreground/10 bg-background px-6 py-4 space-y-1">
+            {[
+              { href: '/about', label: t('nav.about') },
+              { href: '/programs', label: t('nav.programs') },
+              { href: '/advisors', label: t('nav.advisors') },
+              { href: '/scholarships', label: t('nav.scholarships') },
+              { href: '/pricing', label: t('nav.pricing') },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-sm tracking-widest uppercase text-foreground/70 hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="pt-4 flex flex-col gap-3 border-t border-foreground/10 mt-4">
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-sm tracking-wide uppercase hover:opacity-70 transition-opacity">{t('nav.login')}</Link>
+              <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="rounded-none bg-foreground text-background hover:bg-foreground/90 w-full h-12 text-sm tracking-wide uppercase shadow-none">{t('nav.cta')}</Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       <main>
         {/* Hero Section */}
-        <section className="pt-20 pb-24 lg:pt-28 lg:pb-32 px-6 lg:px-12 max-w-[90rem] mx-auto">
+        <section className="pt-12 pb-16 lg:pt-28 lg:pb-32 px-6 lg:px-12 max-w-[90rem] mx-auto">
           <motion.div
             variants={stagger}
             initial="initial"
@@ -93,42 +153,42 @@ export default function HomePage() {
             className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center"
           >
             <motion.div variants={fadeInUp} className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 border border-border bg-muted px-4 py-2 rounded-none text-xs uppercase tracking-widest text-muted-foreground mb-10">
+              <div className="inline-flex items-center gap-2 border border-border bg-muted px-4 py-2 rounded-none text-xs uppercase tracking-widest text-muted-foreground mb-8">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 {t('home.badge')}
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tighter text-foreground leading-[1.0] mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tighter text-foreground leading-[1.0] mb-6">
                 {t('home.hero1')}{' '}
                 <em className="not-italic text-primary">{t('home.hero2')}</em>{' '}
                 {t('home.hero3')}{' '}
                 {t('home.hero4')}
               </h1>
-              <p className="text-lg text-foreground/70 font-light leading-relaxed mb-10 max-w-lg">
+              <p className="text-base md:text-lg text-foreground/70 font-light leading-relaxed mb-8 max-w-lg">
                 {t('home.heroSub')}
               </p>
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-3 flex-wrap">
                 <Link href="/register">
-                  <Button className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-10 text-sm tracking-widest uppercase shadow-none group">
+                  <Button className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 h-12 md:h-14 px-8 md:px-10 text-sm tracking-widest uppercase shadow-none group">
                     {t('home.ctaPrimary')}
                     <ArrowUpRight className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </Button>
                 </Link>
                 <Link href="/programs">
-                  <Button variant="outline" className="rounded-none border-foreground/20 h-14 px-10 text-sm tracking-widest uppercase shadow-none hover:bg-muted">
+                  <Button variant="outline" className="rounded-none border-foreground/20 h-12 md:h-14 px-8 md:px-10 text-sm tracking-widest uppercase shadow-none hover:bg-muted">
                     {t('home.ctaSecondary')}
                   </Button>
                 </Link>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="lg:col-start-9 lg:col-span-4 flex flex-col gap-10 border-l border-foreground/10 pl-12">
+            <motion.div variants={fadeInUp} className="lg:col-start-9 lg:col-span-4 flex flex-row lg:flex-col gap-6 lg:gap-10 border-t lg:border-t-0 lg:border-l border-foreground/10 pt-8 lg:pt-0 lg:pl-12 mt-4 lg:mt-0">
               {[
                 { num: '157+', label: t('home.stats3') },
                 { num: '70+', label: t('home.stats2') },
                 { num: '15+', label: t('home.stats4') },
               ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="text-5xl font-serif text-foreground mb-1">{stat.num}</div>
+                <div key={stat.label} className="flex-1 lg:flex-none">
+                  <div className="text-3xl md:text-5xl font-serif text-foreground mb-1">{stat.num}</div>
                   <div className="text-xs uppercase tracking-widest text-foreground/50">{stat.label}</div>
                 </div>
               ))}
@@ -137,18 +197,18 @@ export default function HomePage() {
         </section>
 
         {/* How It Works */}
-        <section className="py-32 lg:py-48 px-6 lg:px-12">
+        <section className="py-20 lg:py-48 px-6 lg:px-12">
           <div className="max-w-[90rem] mx-auto">
-            <div className="grid lg:grid-cols-12 gap-8 mb-20">
+            <div className="grid lg:grid-cols-12 gap-6 mb-12 md:mb-20">
               <div className="lg:col-span-4">
                 <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">{t('home.howTitle')}</p>
-                <h2 className="text-5xl md:text-6xl font-serif tracking-tighter">{t('home.howTitle')}</h2>
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif tracking-tighter">{t('home.howTitle')}</h2>
               </div>
               <div className="lg:col-span-5 lg:col-start-7 flex items-end">
-                <p className="text-lg text-foreground/60 font-light leading-relaxed">{t('home.howSub')}</p>
+                <p className="text-base md:text-lg text-foreground/60 font-light leading-relaxed">{t('home.howSub')}</p>
               </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
               {features.map((feature, i) => (
                 <motion.div
                   key={feature.num}
@@ -156,7 +216,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   viewport={{ once: true, amount: 0 }}
-                  className="border border-border p-10 flex flex-col gap-6 group hover:bg-muted transition-colors"
+                  className="border border-border p-8 md:p-10 flex flex-col gap-6 group hover:bg-muted transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <feature.icon className="h-6 w-6 text-primary" />
@@ -173,20 +233,20 @@ export default function HomePage() {
         </section>
 
         {/* Featured Programs */}
-        <section className="py-32 px-6 lg:px-12 bg-secondary text-secondary-foreground">
+        <section className="py-20 md:py-32 px-6 lg:px-12 bg-secondary text-secondary-foreground">
           <div className="max-w-[90rem] mx-auto">
-            <div className="flex items-end justify-between mb-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 md:mb-20">
               <div>
                 <p className="text-xs uppercase tracking-widest text-secondary-foreground/40 mb-4">{t('home.featuredTitle')}</p>
-                <h2 className="text-5xl font-serif">{t('home.featuredTitle')}</h2>
+                <h2 className="text-4xl md:text-5xl font-serif">{t('home.featuredTitle')}</h2>
                 <p className="text-secondary-foreground/60 font-light mt-4 max-w-md">{t('home.featuredSub')}</p>
               </div>
-              <Link href="/programs" className="hidden md:flex items-center gap-2 text-sm uppercase tracking-widest text-secondary-foreground/60 hover:text-secondary-foreground transition-colors group">
+              <Link href="/programs" className="flex items-center gap-2 text-sm uppercase tracking-widest text-secondary-foreground/60 hover:text-secondary-foreground transition-colors group">
                 {t('home.viewAll')}
                 <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
               {programs.map((program, i) => (
                 <motion.div
                   key={`${program.university}-${i}`}
@@ -215,16 +275,16 @@ export default function HomePage() {
 
 
         {/* CTA Section */}
-        <section className="py-32 px-6 lg:px-12 bg-primary">
-          <div className="max-w-[90rem] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+        <section className="py-20 md:py-32 px-6 lg:px-12 bg-primary">
+          <div className="max-w-[90rem] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12">
             <div>
-              <h2 className="text-5xl md:text-6xl font-serif text-primary-foreground mb-4">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-primary-foreground mb-4">
                 {t('home.ctaSection')}
               </h2>
-              <p className="text-primary-foreground/70 font-light text-lg">{t('home.ctaSectionSub')}</p>
+              <p className="text-primary-foreground/70 font-light text-base md:text-lg">{t('home.ctaSectionSub')}</p>
             </div>
             <Link href="/register">
-              <Button className="rounded-none bg-primary-foreground text-primary hover:bg-primary-foreground/90 h-16 px-12 text-sm tracking-widest uppercase shadow-none group shrink-0">
+              <Button className="rounded-none bg-primary-foreground text-primary hover:bg-primary-foreground/90 h-14 md:h-16 px-10 md:px-12 text-sm tracking-widest uppercase shadow-none group shrink-0">
                 {t('home.ctaSectionBtn')}
                 <ArrowUpRight className="ml-3 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </Button>

@@ -71,14 +71,14 @@ export default function PricingPage() {
 
       <main>
         {/* Hero */}
-        <section className="pt-24 pb-20 lg:pt-36 px-6 lg:px-12 max-w-[90rem] mx-auto border-b border-foreground/10">
+        <section className="pt-16 pb-16 lg:pt-36 px-6 lg:px-12 max-w-[90rem] mx-auto border-b border-foreground/10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('pricing.badge')}</p>
-            <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
               {t('pricing.hero1')}<br />
               <span className="italic text-primary">{t('pricing.hero2')}</span><br />
               {t('pricing.hero3')}
@@ -90,15 +90,15 @@ export default function PricingPage() {
         </section>
 
         {/* Pricing Cards */}
-        <section className="py-32 px-6 lg:px-12">
-          <div className="max-w-[90rem] mx-auto grid md:grid-cols-3 gap-0">
+        <section className="py-16 md:py-32 px-6 lg:px-12">
+          <div className="max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0">
             {plans.map((plan, i) => (
               <motion.div
                 key={plan.name}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className={`border border-border p-12 flex flex-col ${
+                className={`border border-border p-8 md:p-12 flex flex-col ${
                   plan.highlight ? 'bg-secondary text-secondary-foreground' : 'bg-background'
                 }`}
               >
@@ -132,9 +132,9 @@ export default function PricingPage() {
         </section>
 
         {/* FAQ strip */}
-        <section className="py-24 px-6 lg:px-12 bg-muted">
-          <div className="max-w-[90rem] mx-auto grid md:grid-cols-2 gap-16">
-            <h2 className="text-4xl font-serif">{t('pricing.faqTitle')}</h2>
+        <section className="py-16 md:py-24 px-6 lg:px-12 bg-muted">
+          <div className="max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+            <h2 className="text-3xl md:text-4xl font-serif">{t('pricing.faqTitle')}</h2>
             <div className="space-y-10">
               {[
                 { q: 'Can I upgrade my plan later?', a: 'Yes. You can upgrade to a higher plan at any time and only pay the difference.' },
@@ -152,9 +152,9 @@ export default function PricingPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-24 px-6 lg:px-12 bg-foreground text-background">
-          <div className="max-w-[90rem] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-            <h2 className="text-4xl md:text-5xl font-serif max-w-xl">{t('pricing.freeCall')}</h2>
+        <section className="py-16 md:py-24 px-6 lg:px-12 bg-foreground text-background">
+          <div className="max-w-[90rem] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif max-w-xl">{t('pricing.freeCall')}</h2>
             <Link href="/contact">
               <button className="rounded-none border border-background/30 hover:bg-background hover:text-foreground transition-colors px-12 h-14 text-sm tracking-widest uppercase">
                 {t('pricing.bookCall')}

@@ -86,10 +86,10 @@ export default function ProgramsPage() {
 
       <main>
         {/* Hero */}
-        <section className="pt-24 pb-20 lg:pt-36 px-6 lg:px-12 max-w-[90rem] mx-auto border-b border-foreground/10">
+        <section className="pt-16 pb-16 lg:pt-36 px-6 lg:px-12 max-w-[90rem] mx-auto border-b border-foreground/10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <p className="text-xs uppercase tracking-widest text-primary mb-8">{t('programs.badge')}</p>
-            <h1 className="text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-serif font-medium tracking-tighter text-foreground leading-[0.9]">
               {t('programs.hero1')}<br />
               <span className="italic text-primary">{t('programs.hero2')}</span><br />
               {t('programs.hero3')}
@@ -103,8 +103,8 @@ export default function ProgramsPage() {
         </section>
 
         {/* Filters */}
-        <section className="py-10 px-6 lg:px-12 border-b border-foreground/10 sticky top-0 bg-background z-10">
-          <div className="max-w-[90rem] mx-auto space-y-6">
+        <section className="py-6 md:py-10 px-6 lg:px-12 border-b border-foreground/10 sticky top-0 bg-background z-10">
+          <div className="max-w-[90rem] mx-auto space-y-4 md:space-y-6">
             {/* Search */}
             <div className="relative max-w-xl">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/30" />
@@ -117,7 +117,7 @@ export default function ProgramsPage() {
               />
             </div>
 
-            <div className="flex flex-wrap gap-8">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-6 md:gap-8">
               {/* Degree filter */}
               <div>
                 <p className="text-xs uppercase tracking-widest text-foreground/40 mb-3">{t('programs.degree')}</p>
@@ -189,9 +189,9 @@ export default function ProgramsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.03 }}
-                    className="border-t border-foreground/10 py-10 grid md:grid-cols-12 gap-6 group"
+                    className="border-t border-foreground/10 py-6 md:py-10 grid md:grid-cols-12 gap-3 md:gap-6 group"
                   >
-                    <div className="md:col-span-1 flex flex-col gap-2">
+                    <div className="md:col-span-1 flex flex-row md:flex-col gap-2 items-center md:items-start">
                       <span className="text-xs uppercase tracking-widest border border-foreground/10 px-2 py-1 text-foreground/40 w-fit">
                         {DEGREE_LABELS[program.degreeLevel] || program.degreeLevel}
                       </span>
@@ -201,7 +201,7 @@ export default function ProgramsPage() {
                     </div>
 
                     <div className="md:col-span-5">
-                      <h3 className="text-xl font-serif mb-1 group-hover:text-primary transition-colors">{program.name}</h3>
+                      <h3 className="text-lg md:text-xl font-serif mb-1 group-hover:text-primary transition-colors">{program.name}</h3>
                       <p className="text-foreground/60 font-light text-sm">{program.institution.name}</p>
                     </div>
 
@@ -228,9 +228,9 @@ export default function ProgramsPage() {
                       </span>
                     </div>
 
-                    <div className="md:col-span-1 flex flex-col items-end justify-between gap-2">
+                    <div className="md:col-span-1 flex flex-row md:flex-col items-center md:items-end justify-between md:justify-between gap-2">
                       {program.intakeSeason && (
-                        <span className="text-xs text-foreground/40 text-right">{program.intakeSeason}</span>
+                        <span className="text-xs text-foreground/40 md:text-right">{program.intakeSeason}</span>
                       )}
                       <Link href="/register">
                         <button className="rounded-none border border-foreground/20 hover:bg-foreground hover:text-background transition-colors w-10 h-10 flex items-center justify-center group/btn">
