@@ -42,7 +42,9 @@
       "Bash(find /Users/insarek/Documents/studented_me-main/frontend/src -name dashboard-layout* -o -name layout.tsx)",
       "Bash(wait)",
       "Bash(vercel logs:*)",
-      "Bash(curl -s -X POST https://studented-me-main.vercel.app/api/v1/auth/login -H \"Content-Type: application/json\" -d '{\"\"\"\"email\"\"\"\":\"\"\"\"imastikbaev@gmail.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"test123\"\"\"\"}')"
+      "Bash(curl -s -X POST https://studented-me-main.vercel.app/api/v1/auth/login -H \"Content-Type: application/json\" -d '{\"\"\"\"email\"\"\"\":\"\"\"\"imastikbaev@gmail.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"test123\"\"\"\"}')",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Generated so far: {len\\(d\\)} entries''''\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f''''Generated: {len\\(d\\)}/200 entries''''\\)\")"
     ]
   }
 }

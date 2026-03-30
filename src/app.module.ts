@@ -20,6 +20,7 @@ import { OpportunitiesModule } from './modules/opportunities/opportunities.modul
 import { ApplicationsModule } from './modules/applications/applications.module';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { AnalyzerModule } from './modules/analyzer/analyzer.module';
+import { SopGeneratorModule } from './modules/sop-generator/sop-generator.module';
 // import { VisaModule } from './modules/visa/visa.module';
 // import { TasksModule } from './modules/tasks/tasks.module';
 // import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -63,6 +64,7 @@ import { AnalyzerModule } from './modules/analyzer/analyzer.module';
     // LeadsModule,
     DocumentsModule,
     AnalyzerModule,
+    SopGeneratorModule,
 
     // VisaModule,
     // TasksModule,

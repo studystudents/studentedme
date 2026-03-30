@@ -27,6 +27,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     { name: t('dashboard.nav.applications'), href: '/dashboard/applications', icon: FileText },
     { name: t('dashboard.nav.documents'), href: '/dashboard/documents', icon: FolderOpen },
     { name: 'AI Analyzer', href: '/dashboard/analyzer', icon: Sparkles },
+    { name: 'SOP Generator', href: '/dashboard/sop-generator', icon: FileText },
     { name: t('dashboard.nav.settings'), href: '/dashboard/settings', icon: Settings },
   ];
 
