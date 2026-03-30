@@ -35,9 +35,11 @@ export class AnalyzerService {
   private readonly client: Anthropic;
 
   constructor(private readonly config: ConfigService) {
-    const apiKey = this.config.get<string>('ANTHROPIC_API_KEY');
+    const apiKey = process.env.ANTHROPIC_API_KEY || this.config.get<string>('ANTHROPIC_API_KEY');
     if (!apiKey) {
       this.logger.warn('ANTHROPIC_API_KEY is not set. AI analysis will not work.');
+    } else {
+      this.logger.log(`ANTHROPIC_API_KEY loaded (starts with: ${apiKey.substring(0, 12)}...)`);
     }
     this.client = new Anthropic({ apiKey: apiKey || 'placeholder' });
   }
@@ -166,11 +168,12 @@ You must respond in valid JSON format only. Do not include any text outside of t
 
       return result;
     } catch (error) {
-      this.logger.error('Failed to analyze profile', error);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to analyze profile: ${errMsg}`);
       if (error instanceof SyntaxError) {
-        throw new InternalServerErrorException('Failed to parse AI response. Please try again.');
+        throw new InternalServerErrorException(`Failed to parse AI response: ${errMsg}`);
       }
-      throw new InternalServerErrorException('AI analysis service is currently unavailable. Please try again later.');
+      throw new InternalServerErrorException(`AI analysis failed: ${errMsg}`);
     }
   }
 }
