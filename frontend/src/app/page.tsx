@@ -29,19 +29,14 @@ export default function HomePage() {
   ];
 
   const programs = [
-    { university: 'University of Amsterdam', program: 'MSc Data Science & AI', location: 'Amsterdam, Netherlands', deadline: 'Apr 2025', type: 'Masters' },
-    { university: 'Sciences Po Paris', program: 'Master in International Affairs', location: 'Paris, France', deadline: 'Jan 2025', type: 'Masters' },
-    { university: 'University of Toronto', program: 'MBA Program', location: 'Toronto, Canada', deadline: 'Mar 2025', type: 'MBA' },
-    { university: 'ETH Zurich', program: 'MSc Computer Science', location: 'Zurich, Switzerland', deadline: 'Dec 2024', type: 'Masters' },
-    { university: 'University of Melbourne', program: 'Master of Architecture', location: 'Melbourne, Australia', deadline: 'May 2025', type: 'Masters' },
-    { university: 'LSE', program: 'MSc Finance', location: 'London, UK', deadline: 'Feb 2025', type: 'Masters' },
+    { university: 'University of Amsterdam', program: 'MSc Data Science & AI', location: 'Amsterdam, Netherlands', type: 'Masters' },
+    { university: 'Sciences Po Paris', program: 'Master in International Affairs', location: 'Paris, France', type: 'Masters' },
+    { university: 'University of Toronto', program: 'MBA Program', location: 'Toronto, Canada', type: 'MBA' },
+    { university: 'ETH Zurich', program: 'MSc Computer Science', location: 'Zurich, Switzerland', type: 'Masters' },
+    { university: 'University of Melbourne', program: 'Master of Architecture', location: 'Melbourne, Australia', type: 'Masters' },
+    { university: 'LSE', program: 'MSc Finance', location: 'London, UK', type: 'Masters' },
   ];
 
-  const testimonials = [
-    { name: 'Aisha M.', program: 'MSc Finance, LSE', country: 'Nigeria → UK', quote: 'Studented.me transformed what felt like an impossible dream into a clear, achievable path. My counselor was exceptional.', year: '2024' },
-    { name: 'Dmitri V.', program: 'MBA, INSEAD', country: 'Russia → France', quote: 'The document support and application strategy were game-changing. I was accepted to my first-choice program.', year: '2024' },
-    { name: 'Mei-Lin C.', program: 'MSc AI, ETH Zurich', country: 'Taiwan → Switzerland', quote: 'Professional, thorough, and genuinely caring. This team helped me navigate every step with confidence.', year: '2023' },
-  ];
 
   return (
     <div className="min-h-screen bg-background bg-noise">
@@ -203,7 +198,6 @@ export default function HomePage() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs uppercase tracking-widest text-primary border border-primary/30 px-2 py-1">{program.type}</span>
-                    <span className="text-xs text-secondary-foreground/40">Due {program.deadline}</span>
                   </div>
                   <div>
                     <h3 className="font-serif text-xl mb-1 group-hover:text-primary transition-colors">{program.program}</h3>
@@ -219,37 +213,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-32 px-6 lg:px-12">
-          <div className="max-w-[90rem] mx-auto">
-            <div className="border-t border-foreground/10 pt-12 mb-20">
-              <p className="text-xs uppercase tracking-widest text-foreground/40 mb-4">{t('home.testimonialsTitle')}</p>
-              <h2 className="text-5xl font-serif">{t('home.testimonialsTitle')}</h2>
-              <p className="text-foreground/60 font-light mt-4">{t('home.testimonialsSub')}</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-0">
-              {testimonials.map((testimonial, i) => (
-                <motion.div
-                  key={testimonial.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
-                  viewport={{ once: true, amount: 0 }}
-                  className="border border-border p-10 flex flex-col gap-6"
-                >
-                  <p className="text-xl font-serif font-light leading-relaxed italic text-foreground/80">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-                  <div className="mt-auto border-t border-foreground/10 pt-6">
-                    <div className="font-serif text-lg">{testimonial.name}</div>
-                    <div className="text-sm text-primary font-light">{testimonial.program}</div>
-                    <div className="text-xs text-foreground/40 mt-1 uppercase tracking-wide">{testimonial.country} · {testimonial.year}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="py-32 px-6 lg:px-12 bg-primary">

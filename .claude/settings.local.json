@@ -35,7 +35,8 @@
       "Bash(python3 -m json.tool)",
       "Bash(TOKEN=\"vca_4bukIQMj6qs0dgwnSqdyqRR9M9RFgsv2Q0Dx9WdsNAdUwvDXIv4QvDUv\" curl -s -X POST \"https://api.vercel.com/v10/projects/prj_yH1ftKOziWdeAXwq3SlgetFQURb3/domains?teamId=team_BKmh08MCShMRXaxEhkWArmDf\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"studented.me\"\"\"\"}')",
       "Bash(TOKEN=\"vca_4bukIQMj6qs0dgwnSqdyqRR9M9RFgsv2Q0Dx9WdsNAdUwvDXIv4QvDUv\" curl -s -X POST \"https://api.vercel.com/v10/projects/prj_yH1ftKOziWdeAXwq3SlgetFQURb3/domains?teamId=team_BKmh08MCShMRXaxEhkWArmDf\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" -d '{\"\"\"\"name\"\"\"\":\"\"\"\"www.studented.me\"\"\"\",\"\"\"\"redirect\"\"\"\":\"\"\"\"studented.me\"\"\"\",\"\"\"\"redirectStatusCode\"\"\"\":308}')",
-      "WebFetch(domain:www.linkedin.com)"
+      "WebFetch(domain:www.linkedin.com)",
+      "Bash(vercel --prod --yes)"
     ]
   }
 }
