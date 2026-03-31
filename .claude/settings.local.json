@@ -59,7 +59,12 @@
       "Bash(node create_report.js)",
       "Bash(mkdir -p /tmp/docx_report)",
       "Bash(npm init:*)",
-      "Bash(head -20 grep -rn \"Bachelor\\\\|HIGH_SCHOOL\\\\|High School\\\\|degreeLevel\\\\|programType\" /Users/insarek/Documents/studented_me-main/frontend/src/app/dashboard/sop-generator/page.tsx)"
+      "Bash(head -20 grep -rn \"Bachelor\\\\|HIGH_SCHOOL\\\\|High School\\\\|degreeLevel\\\\|programType\" /Users/insarek/Documents/studented_me-main/frontend/src/app/dashboard/sop-generator/page.tsx)",
+      "Bash(head -20 grep -n \"overflow\\\\|scroll\\\\|h-\\\\[\" /Users/insarek/Documents/studented_me-main/frontend/src/app/dashboard/programs/page.tsx)",
+      "Bash(node business_model.js)",
+      "Bash(python3 \"/Users/insarek/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/657b9755-d21f-4860-9f7e-ec080d30c021/20cbcdab-6289-4f0f-a7c6-7a9e5eec08c7/skills/pptx/scripts/office/soffice.py\" --headless --convert-to pdf \"/Users/insarek/Downloads/Business_Model_Studented.pptx\")",
+      "Bash(pdftoppm -jpeg -r 150 /tmp/Business_Model_Studented.pdf /tmp/slide)",
+      "Bash(ls /tmp/slide*.jpg)"
     ]
   }
 }

@@ -13,7 +13,7 @@ export default function PricingPage() {
   const plans = [
     {
       name: 'Basic',
-      price: '$29.9',
+      price: '$14.9',
       period: t('pricing.period1'),
       tagline: t('pricing.tag1'),
       features: [
@@ -29,7 +29,7 @@ export default function PricingPage() {
     },
     {
       name: 'Premium',
-      price: '$89.9',
+      price: '$39.9',
       period: t('pricing.period2'),
       tagline: t('pricing.tag2'),
       features: [

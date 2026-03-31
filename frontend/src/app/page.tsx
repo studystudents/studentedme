@@ -254,7 +254,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
                   viewport={{ once: true, amount: 0 }}
-                  className="border border-secondary-foreground/10 p-8 flex flex-col gap-4 group hover:bg-secondary-foreground/5 transition-colors cursor-pointer"
+                  className={`border border-secondary-foreground/10 p-8 flex flex-col gap-4 group hover:bg-secondary-foreground/5 transition-colors cursor-pointer${i >= 3 ? ' hidden md:flex' : ''}`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs uppercase tracking-widest text-primary border border-primary/30 px-2 py-1">{program.type}</span>
@@ -269,6 +269,12 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               ))}
+            </div>
+            <div className="md:hidden mt-6 text-center">
+              <Link href="/programs" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest border border-foreground/20 px-6 py-3 hover:bg-foreground hover:text-background transition-colors">
+                {t('home.viewAll')}
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </section>
